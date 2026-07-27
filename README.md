@@ -21,5 +21,4 @@ independently in Lean, and conjectural physics interpretations stay separate
 from proved mathematics.
 
 The Lean layout follows [Tau Ceti](https://github.com/TauCetiProject/TauCeti)
-where its conventions apply. Review rubrics and documentation sites are
-intentionally deferred.
+where its conventions apply.
