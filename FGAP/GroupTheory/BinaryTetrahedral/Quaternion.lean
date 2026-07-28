@@ -49,24 +49,18 @@ abbrev InvertibleQuaternions := (ℍ[ℝ])ˣ
 
 /-- The quaternion unit `i`. -/
 def quaternionI : InvertibleQuaternions :=
-  Units.mk0 (⟨0, 1, 0, 0⟩ : ℍ[ℝ]) (by
-    intro h
-    have him := congrArg (fun q : ℍ[ℝ] => q.imI) h
-    norm_num at him)
+  Units.mk0 (⟨0, 1, 0, 0⟩ : ℍ[ℝ])
+    (Quaternion.normSq_ne_zero.mp (by norm_num [Quaternion.normSq_def']))
 
 /-- The quaternion unit `j`. -/
 def quaternionJ : InvertibleQuaternions :=
-  Units.mk0 (⟨0, 0, 1, 0⟩ : ℍ[ℝ]) (by
-    intro h
-    have hjm := congrArg (fun q : ℍ[ℝ] => q.imJ) h
-    norm_num at hjm)
+  Units.mk0 (⟨0, 0, 1, 0⟩ : ℍ[ℝ])
+    (Quaternion.normSq_ne_zero.mp (by norm_num [Quaternion.normSq_def']))
 
 /-- The quaternion unit `k`. -/
 def quaternionK : InvertibleQuaternions :=
-  Units.mk0 (⟨0, 0, 0, 1⟩ : ℍ[ℝ]) (by
-    intro h
-    have hkm := congrArg (fun q : ℍ[ℝ] => q.imK) h
-    norm_num at hkm)
+  Units.mk0 (⟨0, 0, 0, 1⟩ : ℍ[ℝ])
+    (Quaternion.normSq_ne_zero.mp (by norm_num [Quaternion.normSq_def']))
 
 /-- The quaternion underlying the selected Hurwitz unit. -/
 def hurwitzCycleValue : ℍ[ℝ] :=
@@ -74,32 +68,26 @@ def hurwitzCycleValue : ℍ[ℝ] :=
 
 /-- The Hurwitz unit `(-1 + i + j + k) / 2`. -/
 def hurwitzCycle : InvertibleQuaternions :=
-  Units.mk0 hurwitzCycleValue (by
-    intro h
-    have hre := congrArg (fun q : ℍ[ℝ] => q.re) h
-    norm_num [hurwitzCycleValue] at hre)
+  Units.mk0 hurwitzCycleValue
+    (Quaternion.normSq_ne_zero.mp (by norm_num [hurwitzCycleValue, Quaternion.normSq_def']))
 
 /-- The selected Hurwitz unit has cube one. -/
 theorem hurwitzCycle_pow_three : hurwitzCycle ^ 3 = 1 := by
-  apply Units.ext
   ext <;> norm_num [hurwitzCycle, hurwitzCycleValue, pow_succ,
     Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
 private theorem hurwitzCycle_mul_quaternionI :
     hurwitzCycle * quaternionI = quaternionK * hurwitzCycle := by
-  apply Units.ext
   ext <;> norm_num [hurwitzCycle, hurwitzCycleValue, quaternionI, quaternionK,
     Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
 private theorem hurwitzCycle_mul_quaternionJ :
     hurwitzCycle * quaternionJ = quaternionI * hurwitzCycle := by
-  apply Units.ext
   ext <;> norm_num [hurwitzCycle, hurwitzCycleValue, quaternionI, quaternionJ,
     Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
 private theorem hurwitzCycle_mul_quaternionK :
     hurwitzCycle * quaternionK = quaternionJ * hurwitzCycle := by
-  apply Units.ext
   ext <;> norm_num [hurwitzCycle, hurwitzCycleValue, quaternionJ, quaternionK,
     Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
