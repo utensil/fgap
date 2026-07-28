@@ -10,7 +10,7 @@ physical structures more deeply. It does not construct or claim a physical
 theory. Its Lean library is developed alongside expository notes and worked
 calculations.
 
-FGAP asks whether group algebras provide a useful organizing level for
+The question is whether group algebras provide a useful organizing level for
 structures that physics usually introduces separately. Finite groups and their
 real group algebras offer a controlled setting for studying actions,
 representations, idempotents, simple components, and explicit maps into familiar
@@ -30,7 +30,7 @@ representation, algebra map, kernel, real form, involution, or other required
 data must be stated explicitly.
 
 Clifford algebras (a.k.a. Geometric Algebra in the context of work pioneered by
-David Hestenes) were considered a potential route to this question. This
+David Hestenes) were considered as a potential route to this question. This
 direction was inspired by Chris Doran and Anthony Lasenby's
 [*Geometric Algebra for Physicists*](https://doi.org/10.1017/CBO9780511807497),
 which later led to
@@ -48,10 +48,11 @@ The shared abbreviation GA is a happy coincidence: here it means group algebras,
 and the search extends beyond the limitations of Clifford algebras.
 
 [Rob Wilson's group-theoretic work](https://robwilson1.wordpress.com/) supplies
-concrete examples of using finite groups to probe physical structures. FGAP takes
-inspiration from that work alongside representation theory and exploratory work
-in other directions, including non-associative algebras. Across these sources,
-we separate mathematical constructions from physical hypotheses.
+concrete examples of using finite groups to probe physical structures.
+Inspiration is taken from that work alongside representation theory and
+exploratory work in other directions, including non-associative algebras.
+Across these sources, we separate mathematical constructions from physical
+hypotheses.
 
 The Lean code and project workflow follow applicable conventions from
 [Tau Ceti](https://github.com/TauCetiProject/TauCeti).
