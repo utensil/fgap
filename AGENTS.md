@@ -25,6 +25,24 @@
 - Push with an explicit refspec and read the remote branch back after every
   milestone.
 
+## GitHub communication
+
+- AI agents own code and documentation, a development branch, issue and
+  pull-request titles and bodies, and commit messages.
+- Do not post comments or apply `lgth`. Read human comments and address them
+  through commits or an updated issue or pull-request body.
+- Record review and revision considerations and changes only in commit
+  messages.
+
+## Review states
+
+- `lgta` means "looks good to AI agent." After `lgta`, pull-request work may be
+  merged into the development branch in Git history, not through GitHub.
+- `lgth` means "looks good to human." Only a human may post the holistic review
+  comment and apply `lgth`, which gates merge into `main`.
+- Both states apply to a specific head commit. A new commit requires review
+  again.
+
 ## Verification
 
 - Follow applicable Tau Ceti and mathlib conventions.
