@@ -23,15 +23,15 @@ The provisional mechanism below implements this policy.
 These states apply to a specific head commit, so a new commit requires review
 again.
 
-The communication channels are provisionally separated. AI agents own the code
+The communication channels are separated. AI agents own the code
 and documentation, issue and pull-request titles and bodies, and commit
 messages. They do not post comments. Review and revision considerations and
 changes are reflected only in commit messages. Humans own pull-request comments
 and the `lgth` label.
 
-AI agents also own a development branch. Once `lgta` has been reached,
-pull-request work is "merged" into that branch in Git history, not merged
-through GitHub, and other work may build on it. Merge into `main` requires one
-holistic human comment and the `lgth` label. The comment has no format
-requirement and may contain spelling or grammar errors, but it must faithfully
-represent the human perception and consideration of the pull request.
+AI agents also own `dev`, the integration and testing branch for pull-request
+work that has reached `lgta`. It is not an implicit base for new work. Merge
+into `main` is squashed and requires one holistic human comment and the `lgth`
+label. The comment has no format requirement and may contain spelling or
+grammar errors, but it must faithfully represent the human perception and
+consideration of the pull request.
