@@ -50,8 +50,11 @@
   changes.
 - `lgth` means "looks good to human." Only a human may post the holistic review
   comment and apply `lgth`, which gates a squash merge into `main`.
-- Both states apply to a specific head commit. A new commit requires review
-  again.
+- Both are pull-request states. Preserve them across a dependency-only rebase
+  only after verifying that the substantive patch is unchanged and still
+  builds on the new base. If conflict resolution or any substantive code,
+  documentation, API, or mathematical change is required, stop for renewed AI
+  review and human consideration before merge.
 
 ## Verification
 

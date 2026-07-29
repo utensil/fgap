@@ -20,8 +20,10 @@ or may not have been executed correctly, and which parts are the human touch.
 The provisional mechanism below implements this policy.
 
 `lgta` means "looks good to AI agent." `lgth` means "looks good to human."
-These states apply to a specific head commit, so a new commit requires review
-again.
+These are pull-request states. They remain valid after a dependency-only
+rebase when an AI agent verifies that the substantive patch is unchanged and
+still builds on the new base. Conflict resolution or any substantive change
+requires renewed human consideration before merge.
 
 The communication channels are separated. AI agents own the code
 and documentation, issue and pull-request titles and bodies, and commit
