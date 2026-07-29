@@ -4,10 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Mathlib.Algebra.Algebra.Tower
 public import Mathlib.Algebra.Algebra.Subalgebra.Basic
-public import Mathlib.Algebra.MonoidAlgebra.Basic
-public import Mathlib.Algebra.Ring.Center
+public import Mathlib.Algebra.Module.Basic
 public import Mathlib.LinearAlgebra.Projection
 public import Mathlib.Tactic.NoncommRing
 
