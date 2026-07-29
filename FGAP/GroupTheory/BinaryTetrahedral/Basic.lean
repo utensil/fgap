@@ -66,7 +66,7 @@ private theorem quaternionK_mem_quaternionSubgroup :
 private theorem hurwitzCycle_mem_normalizer_quaternionSubgroup :
     hurwitzCycle ∈ Subgroup.normalizer quaternionSubgroup := by
   rw [Subgroup.mem_normalizer_iff_map_conj_eq]
-  apply le_antisymm
+  apply Subgroup.eq_of_le_of_card_ge
   · rintro _ ⟨q, hq, rfl⟩
     change hurwitzCycle * q * hurwitzCycle⁻¹ ∈ quaternionSubgroup
     rw [quaternionSubgroup_eq_closure] at hq ⊢
@@ -86,15 +86,7 @@ private theorem hurwitzCycle_mem_normalizer_quaternionSubgroup :
     | inv x _ hx =>
         simpa [mul_assoc] using
           (Subgroup.closure {quaternionI, quaternionJ}).inv_mem hx
-  · rw [quaternionSubgroup_eq_closure, Subgroup.closure_le]
-    rintro q (rfl | rfl)
-    · exact ⟨quaternionJ,
-        Subgroup.subset_closure (by simp),
-        hurwitzCycle_conj_quaternionJ⟩
-    · exact ⟨quaternionK, by
-        simpa [quaternionSubgroup_eq_closure] using
-          quaternionK_mem_quaternionSubgroup,
-        hurwitzCycle_conj_quaternionK⟩
+  · rw [Subgroup.card_map_of_injective (MulAut.conj hurwitzCycle).injective]
 
 /-- The order-three Hurwitz subgroup normalizes the concrete quaternion
 subgroup. -/
@@ -153,57 +145,41 @@ noncomputable instance : binaryTetrahedralQuaternion.Normal := by
 /-- The internal quaternion and Hurwitz factors have trivial intersection. -/
 theorem binaryTetrahedral_factors_disjoint :
     Disjoint binaryTetrahedralQuaternion binaryTetrahedralCyclic := by
-  apply disjoint_iff_inf_le.mpr
-  rintro x ⟨hxQ, hxC⟩
-  apply Subtype.ext
-  have hx :
-      (x : InvertibleQuaternions) ∈ quaternionSubgroup ⊓ hurwitzCyclic :=
-    ⟨hxQ, hxC⟩
-  rw [quaternionSubgroup_inf_hurwitzCyclic] at hx
-  exact hx
+  rw [disjoint_iff]
+  change (quaternionSubgroup ⊓ hurwitzCyclic).subgroupOf
+    binaryTetrahedral = ⊥
+  rw [quaternionSubgroup_inf_hurwitzCyclic, Subgroup.bot_subgroupOf]
 
 /-- The internal quaternion and Hurwitz factors are complementary: every
 element has a unique factorization with the quaternion factor on the left. -/
 theorem binaryTetrahedral_isComplement :
     binaryTetrahedralQuaternion.IsComplement' binaryTetrahedralCyclic := by
-  refine ⟨Subgroup.mul_injective_of_disjoint
-    binaryTetrahedral_factors_disjoint, ?_⟩
-  intro t
-  have ht : (t : InvertibleQuaternions) ∈ binaryTetrahedral := t.property
-  change (t : InvertibleQuaternions) ∈
-    (binaryTetrahedral : Set InvertibleQuaternions) at ht
-  rw [binaryTetrahedral_carrier] at ht
-  obtain ⟨q, hq, c, hc, hqc⟩ := ht
-  let qT : binaryTetrahedral :=
-    ⟨q, by
-      change q ∈ quaternionSubgroup ⊔ hurwitzCyclic
-      exact Subgroup.mem_sup_left hq⟩
-  let cT : binaryTetrahedral :=
-    ⟨c, by
-      change c ∈ quaternionSubgroup ⊔ hurwitzCyclic
-      exact Subgroup.mem_sup_right hc⟩
-  refine ⟨(⟨qT, hq⟩, ⟨cT, hc⟩), ?_⟩
-  exact Subtype.ext hqc
+  apply Subgroup.isComplement'_of_disjoint_and_mul_eq_univ
+    binaryTetrahedral_factors_disjoint
+  rw [← Subgroup.normal_mul]
+  exact congrArg (fun H : Subgroup binaryTetrahedral =>
+    (H : Set binaryTetrahedral)) (codisjoint_iff.mp
+      (Subgroup.codisjoint_subgroupOf_sup
+        quaternionSubgroup hurwitzCyclic))
+
+private theorem natCard_subgroupOf {G : Type*} [Group G]
+    {H K : Subgroup G} (h : H ≤ K) :
+    Nat.card (H.subgroupOf K) = Nat.card H :=
+  Nat.card_congr (Subgroup.subgroupOfEquivOfLe h).toEquiv
 
 /-- The concrete binary tetrahedral subgroup has twenty-four elements. -/
 theorem binaryTetrahedral_card :
     Nat.card binaryTetrahedral = 24 := by
-  have hQ : Nat.card binaryTetrahedralQuaternion = 8 := by
-    change Nat.card (quaternionSubgroup.subgroupOf binaryTetrahedral) = 8
-    rw [Nat.card_congr
-      (Subgroup.subgroupOfEquivOfLe
-        (show quaternionSubgroup ≤ binaryTetrahedral from fun _ h =>
-          Subgroup.mem_sup_left h)).toEquiv,
-      Nat.card_eq_fintype_card, card_quaternionSubgroup]
-  have hC : Nat.card binaryTetrahedralCyclic = 3 := by
-    change Nat.card (hurwitzCyclic.subgroupOf binaryTetrahedral) = 3
-    rw [Nat.card_congr
-      (Subgroup.subgroupOfEquivOfLe
-        (show hurwitzCyclic ≤ binaryTetrahedral from fun _ h =>
-          Subgroup.mem_sup_right h)).toEquiv,
-      hurwitzCyclic_card]
   have h := binaryTetrahedral_isComplement.card_mul
-  rw [hQ, hC] at h
+  change Nat.card (quaternionSubgroup.subgroupOf binaryTetrahedral) *
+    Nat.card (hurwitzCyclic.subgroupOf binaryTetrahedral) =
+      Nat.card binaryTetrahedral at h
+  rw [natCard_subgroupOf (show quaternionSubgroup ≤ binaryTetrahedral from
+      le_sup_left),
+    Nat.card_eq_fintype_card, card_quaternionSubgroup,
+    natCard_subgroupOf (show hurwitzCyclic ≤ binaryTetrahedral from
+      le_sup_right),
+    hurwitzCyclic_card] at h
   norm_num at h ⊢
   exact h.symm
 
