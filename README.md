@@ -93,3 +93,5 @@ lake build
 
 The Lean code and project workflow follow applicable conventions from
 [Tau Ceti](https://github.com/TauCetiProject/TauCeti).
+These conventions are adapted for this project's approach; see
+[`AI_POLICY.md`](AI_POLICY.md) and [`AGENTS.md`](AGENTS.md).
