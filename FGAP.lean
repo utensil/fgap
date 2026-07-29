@@ -1,3 +1,3 @@
 module
 
-public import FGAP.GroupTheory.BinaryTetrahedral.QuaternionGroup
+public import FGAP.GroupTheory.BinaryTetrahedral.Basic
