@@ -48,14 +48,28 @@ noncomputable section
 abbrev InvertibleQuaternions := (ℍ[ℝ])ˣ
 
 /-- The quaternion unit `i`. -/
+@[expose]
 def quaternionI : InvertibleQuaternions :=
   Units.mk0 (⟨0, 1, 0, 0⟩ : ℍ[ℝ])
     (Quaternion.normSq_ne_zero.mp (by norm_num [Quaternion.normSq_def']))
 
+/-- The quaternion value represented by `quaternionI`. -/
+@[simp]
+theorem coe_quaternionI :
+    (quaternionI : ℍ[ℝ]) = ⟨0, 1, 0, 0⟩ :=
+  rfl
+
 /-- The quaternion unit `j`. -/
+@[expose]
 def quaternionJ : InvertibleQuaternions :=
   Units.mk0 (⟨0, 0, 1, 0⟩ : ℍ[ℝ])
     (Quaternion.normSq_ne_zero.mp (by norm_num [Quaternion.normSq_def']))
+
+/-- The quaternion value represented by `quaternionJ`. -/
+@[simp]
+theorem coe_quaternionJ :
+    (quaternionJ : ℍ[ℝ]) = ⟨0, 0, 1, 0⟩ :=
+  rfl
 
 /-- The quaternion unit `k`. -/
 def quaternionK : InvertibleQuaternions :=
