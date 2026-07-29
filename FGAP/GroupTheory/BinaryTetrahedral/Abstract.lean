@@ -75,7 +75,16 @@ factors. -/
 abbrev abstractAction :
     Multiplicative (ZMod 3) →* MulAut (QuaternionGroup 2) :=
   (MulAut.congr quaternionFactorEquiv.symm).toMonoidHom.comp
-    (semidirectProductAction.comp cyclicFactorEquiv.symm.symm.toMonoidHom)
+    (semidirectProductAction.comp cyclicFactorEquiv.toMonoidHom)
+
+@[simp]
+theorem abstractAction_apply (c : Multiplicative (ZMod 3))
+    (q : QuaternionGroup 2) :
+    abstractAction c q =
+      quaternionFactorEquiv.symm
+        (semidirectProductAction (cyclicFactorEquiv c)
+          (quaternionFactorEquiv q)) := by
+  simp [abstractAction]
 
 /-- The canonical abstract model of the binary tetrahedral group. -/
 abbrev Abstract :=
