@@ -7,6 +7,8 @@ module
 public import FGAP.GroupTheory.BinaryTetrahedral.SemidirectProduct
 public import Mathlib.GroupTheory.Subgroup.Center
 
+import Mathlib.Tactic.NormNum
+
 /-!
 # The abstract binary tetrahedral group
 
