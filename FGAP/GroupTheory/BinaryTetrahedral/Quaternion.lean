@@ -20,7 +20,9 @@ unit, then verifies its cube and conjugation action by coordinate calculation.
 
 * `BinaryTetrahedral.hurwitzCycle`: the Hurwitz unit
   `(-1 + i + j + k) / 2`.
-* `BinaryTetrahedral.hurwitzCycle_pow_three`: its cube is one.
+* `BinaryTetrahedral.hurwitzCycle_pow_three` and
+  `BinaryTetrahedral.hurwitzCycle_ne_one`: its cube is one, but it is not the
+  identity.
 * `BinaryTetrahedral.hurwitzCycle_conj_quaternionI`,
   `BinaryTetrahedral.hurwitzCycle_conj_quaternionJ`, and
   `BinaryTetrahedral.hurwitzCycle_conj_quaternionK`: conjugation cyclically
@@ -89,6 +91,12 @@ def hurwitzCycle : InvertibleQuaternions :=
 theorem hurwitzCycle_pow_three : hurwitzCycle ^ 3 = 1 := by
   ext <;> norm_num [hurwitzCycle, hurwitzCycleValue, pow_succ,
     Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
+
+/-- The selected Hurwitz unit is not the identity quaternion. -/
+theorem hurwitzCycle_ne_one : hurwitzCycle ≠ 1 := by
+  intro h
+  have hRe := congrArg (fun q : InvertibleQuaternions => (q : ℍ[ℝ]).re) h
+  norm_num [hurwitzCycle, hurwitzCycleValue] at hRe
 
 private theorem hurwitzCycle_mul_quaternionI :
     hurwitzCycle * quaternionI = quaternionK * hurwitzCycle := by
