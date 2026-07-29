@@ -41,6 +41,11 @@ grounded in scholarly sources and explicit calculations, and examined through
 formalization as theory modeling to expose hidden assumptions. The workflow is
 informed, but not dictated, by established reference projects.
 
+Formalization is not only an endpoint. Missing hypotheses, ambiguous
+constructions, and useful reformulations found in Lean are fed back into the
+Forest notes and other mathematical materials, which are corrected or reshaped
+when needed.
+
 The inquiry is not limited to elaborating a single source or assigning one
 mathematical structure to each physical theory. Candidate structures are
 compared against shared requirements and constraints, so that useful
