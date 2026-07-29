@@ -42,10 +42,9 @@ theorem of_mul_self (z : G) (hz2 : z * z = 1) :
 
 omit [Invertible (2 : R)] in
 theorem of_mem_center (z : G) (hz : z ∈ Set.center G) :
-    MonoidAlgebra.of R G z ∈ Set.center R[G] := by
-  rw [Semigroup.mem_center_iff]
-  intro f
-  exact (MonoidAlgebra.of_commute (fun g ↦ hz.comm g) f).eq.symm
+    MonoidAlgebra.of R G z ∈ Set.center R[G] :=
+  Semigroup.mem_center_iff.mpr fun f =>
+    (MonoidAlgebra.of_commute (fun g ↦ hz.comm g) f).eq.symm
 
 theorem centralPlus_add_centralMinus (z : G) :
     centralPlus (R := R) z + centralMinus (R := R) z = 1 :=
@@ -89,9 +88,8 @@ theorem c2Generator_mul_self : c2Generator * c2Generator = 1 := by
   change (1 : ZMod 2) + 1 = 0
   decide
 
-theorem c2Generator_mem_center : c2Generator ∈ Set.center (Multiplicative (ZMod 2)) := by
-  rw [Semigroup.mem_center_iff]
-  exact fun g ↦ mul_comm g c2Generator
+theorem c2Generator_mem_center : c2Generator ∈ Set.center (Multiplicative (ZMod 2)) :=
+  Semigroup.mem_center_iff.mpr fun g => mul_comm g c2Generator
 
 theorem c2_centralPlus_isIdempotentElem :
     IsIdempotentElem (centralPlus (R := R) c2Generator) :=

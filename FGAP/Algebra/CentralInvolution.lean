@@ -121,12 +121,8 @@ section Module
 variable {M : Type*} [AddCommGroup M] [Module A M]
 
 /-- Multiplication by a central algebra element, as an endomorphism of an `A`-module. -/
-def centralMul (a : A) (ha : a ∈ Set.center A) : Module.End A M where
-  toFun x := a • x
-  map_add' _ _ := smul_add ..
-  map_smul' b x := by
-    simp only [smul_smul, RingHom.id_apply]
-    rw [(ha.comm b).eq]
+def centralMul (a : A) (ha : a ∈ Set.center A) : Module.End A M :=
+  Module.End.smulLeft a ha
 
 @[simp]
 theorem centralMul_apply (a : A) (ha : a ∈ Set.center A) (x : M) :
