@@ -111,6 +111,20 @@ subgroup and the order-three Hurwitz subgroup. -/
 def binaryTetrahedral : Subgroup InvertibleQuaternions :=
   quaternionSubgroup ⊔ hurwitzCyclic
 
+/-- The quaternion subgroup lies in the concrete binary tetrahedral
+subgroup. -/
+theorem quaternionSubgroup_le_binaryTetrahedral :
+    quaternionSubgroup ≤ binaryTetrahedral := by
+  rw [binaryTetrahedral]
+  exact le_sup_left
+
+/-- The Hurwitz cyclic subgroup lies in the concrete binary tetrahedral
+subgroup. -/
+theorem hurwitzCyclic_le_binaryTetrahedral :
+    hurwitzCyclic ≤ binaryTetrahedral := by
+  rw [binaryTetrahedral]
+  exact le_sup_right
+
 /-- The concrete binary tetrahedral subgroup is the normalized set product
 of its quaternion and Hurwitz factors. -/
 theorem binaryTetrahedral_carrier :
