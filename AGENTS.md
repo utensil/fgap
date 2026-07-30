@@ -4,6 +4,8 @@
 
 - Work on a dedicated feature branch and worktree. Treat `main` as a review and
   merge surface.
+- Keep `FGAP.lean` import-free. The library glob builds every `FGAP/` module,
+  while an accumulating root import creates conflicts between parallel work.
 - Start independent work from the current `main`. If work depends on pull
   requests with `lgta`, record their numbers and the exact base commit in the
   pull-request body. Use a temporary branch containing only the named

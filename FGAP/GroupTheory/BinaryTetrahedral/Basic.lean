@@ -6,7 +6,7 @@ module
 
 public import FGAP.GroupTheory.BinaryTetrahedral.Cyclic
 public import FGAP.GroupTheory.BinaryTetrahedral.QuaternionGroup
-public import Mathlib.GroupTheory.SemidirectProduct
+public import Mathlib.GroupTheory.Complement
 
 import Mathlib.Algebra.Group.Subgroup.Pointwise
 import Mathlib.Tactic.NormNum
@@ -19,8 +19,8 @@ Hurwitz subgroup inside the invertible real quaternions. The Hurwitz
 conjugation cycle proves normalization, while the coprime factor orders prove
 that the factors intersect trivially.
 
-The concrete subgroup, its internal factors, and the associated external
-semidirect product are kept as distinct models.
+The concrete subgroup and its internal factors are kept separate from the
+external semidirect-product presentation.
 
 ## Main declarations
 
@@ -32,8 +32,8 @@ semidirect product are kept as distinct models.
   the quaternion and Hurwitz subgroups.
 * `BinaryTetrahedral.binaryTetrahedral_isComplement`: the internal factors
   are complementary.
-* `BinaryTetrahedral.binaryTetrahedralEquiv`: the external semidirect product
-  is equivalent to the concrete subgroup.
+* `BinaryTetrahedral.binaryTetrahedral_card`: the concrete subgroup has
+  twenty-four elements.
 
 ## References
 
@@ -182,32 +182,6 @@ theorem binaryTetrahedral_card :
     hurwitzCyclic_card] at h
   norm_num at h ⊢
   exact h.symm
-
-/-- Conjugation by the internal Hurwitz factor on the internal quaternion
-factor. -/
-abbrev binaryTetrahedralAction :
-    binaryTetrahedralCyclic →* MulAut binaryTetrahedralQuaternion :=
-  (binaryTetrahedralQuaternion.normalizerMonoidHom).comp
-    (Subgroup.inclusion
-      (binaryTetrahedralQuaternion.normalizer_eq_top ▸ le_top))
-
-/-- The external semidirect product determined by Hurwitz conjugation is
-equivalent to the concrete binary tetrahedral subgroup. The source consists
-of pairs of internal-factor elements; the target consists of invertible real
-quaternions. -/
-@[expose]
-noncomputable def binaryTetrahedralEquiv :
-    binaryTetrahedralQuaternion ⋊[binaryTetrahedralAction]
-      binaryTetrahedralCyclic ≃* binaryTetrahedral :=
-  SemidirectProduct.mulEquivSubgroup binaryTetrahedral_isComplement
-
-@[simp]
-theorem binaryTetrahedralEquiv_apply
-    (x : binaryTetrahedralQuaternion ⋊[binaryTetrahedralAction]
-      binaryTetrahedralCyclic) :
-    binaryTetrahedralEquiv x =
-      (x.left : binaryTetrahedral) * (x.right : binaryTetrahedral) :=
-  rfl
 
 end
 
