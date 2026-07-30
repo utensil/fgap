@@ -74,9 +74,16 @@ theorem coe_quaternionJ :
   rfl
 
 /-- The quaternion unit `k`. -/
+@[expose]
 def quaternionK : InvertibleQuaternions :=
   Units.mk0 (⟨0, 0, 0, 1⟩ : ℍ[ℝ])
     (Quaternion.normSq_ne_zero.mp (by norm_num [Quaternion.normSq_def']))
+
+/-- The quaternion value represented by `quaternionK`. -/
+@[simp]
+theorem coe_quaternionK :
+    (quaternionK : ℍ[ℝ]) = ⟨0, 0, 0, 1⟩ :=
+  rfl
 
 /-- The quaternion underlying the selected Hurwitz unit. -/
 def hurwitzCycleValue : ℍ[ℝ] :=
