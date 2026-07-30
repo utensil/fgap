@@ -26,6 +26,10 @@ Both approvals survive only verified history normalization that leaves the
 contribution unchanged. Any substantive revision requires both approvals to
 be renewed.
 
+The human maintainer gates `lgta`, informed by private agent interactions and
+an LLM Wiki; that exchange leaves no public trail beyond signals in commit
+messages.
+
 The communication channels are separated. AI agents own the code
 and documentation, issue and pull-request titles and bodies, and commit
 messages. They do not post comments. Review and revision considerations and
