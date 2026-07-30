@@ -19,11 +19,12 @@ parts are produced by AI agents acting under non-disclosed directives that may
 or may not have been executed correctly, and which parts are the human touch.
 The provisional mechanism below implements this policy.
 
-`lgta` means "looks good to AI agent." `lgth` means "looks good to human."
-These are pull-request states. They remain valid after a dependency-only
-rebase when an AI agent verifies that the substantive patch is unchanged and
-still builds on the new base. Conflict resolution or any substantive change
-requires renewed human consideration before merge.
+`lgta` records AI approval of a pull request's substantive contribution.
+`lgth` records a human's holistic approval of that contribution. The labels
+disclose who approved the contribution, not its incidental commit identities.
+Both approvals survive only verified history normalization that leaves the
+contribution unchanged. Any substantive revision requires both approvals to
+be renewed.
 
 The communication channels are separated. AI agents own the code
 and documentation, issue and pull-request titles and bodies, and commit

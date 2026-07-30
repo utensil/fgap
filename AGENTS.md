@@ -50,11 +50,17 @@
   changes.
 - `lgth` means "looks good to human." Only a human may post the holistic review
   comment and apply `lgth`, which gates a squash merge into `main`.
-- Both are pull-request states. Preserve them across a dependency-only rebase
-  only after verifying that the substantive patch is unchanged and still
-  builds on the new base. If conflict resolution or any substantive code,
-  documentation, API, or mathematical change is required, stop for renewed AI
-  review and human consideration before merge.
+- Dependent branches use exact prerequisite heads, while `main` and `dev`
+  receive independent squash commits. Git cannot connect those histories, so a
+  dependent pull request includes prerequisite changes in its diff. After its
+  direct prerequisites land, rebase only the dependent pull request's own
+  commits onto the new `main` and drop the landed prerequisite commits. Its
+  diff must then isolate its contribution.
+- Preserve `lgta` and `lgth` through that normalization only when the old and
+  new substantive patches match, `git range-diff` confirms a history-only
+  change, and the new-base build passes. A conflict or any mathematical, API,
+  code, or documentation change invalidates both approvals and requires
+  renewed AI review and human holistic review.
 
 ## Verification
 
