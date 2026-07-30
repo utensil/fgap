@@ -26,6 +26,7 @@ invertible real quaternions.
 * `BinaryTetrahedral.abstractEquiv`: its equivalence with the concrete binary
   tetrahedral subgroup.
 * `BinaryTetrahedral.centralInvolution`: its central element of order two.
+* `BinaryTetrahedral.abstract_card`: the abstract group has cardinality 24.
 
 ## References
 
@@ -183,6 +184,11 @@ theorem centralInvolution_ne_one :
   rw [quaternionRealization_centralInvolution, map_one] at h'
   have h'' := congrArg (fun u : InvertibleQuaternions => (u : ℍ[ℝ]).re) h'
   norm_num at h''
+
+/-- The abstract binary tetrahedral group has cardinality 24. -/
+@[simp]
+theorem abstract_card : Nat.card Abstract = 24 := by
+  rw [Nat.card_congr abstractEquiv.toEquiv, binaryTetrahedral_card]
 
 end
 
