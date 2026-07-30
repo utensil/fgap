@@ -1,3 +1,5 @@
+![FGAP banner](assets/fgap-banner.png)
+
 # FGAP
 
 FGAP is read "F-gap," for the foundational gap between established mathematical
@@ -9,6 +11,8 @@ This repository studies mathematical structures that may help us understand
 physical structures more deeply. It does not construct or claim a physical
 theory. Its Lean library is developed alongside expository notes and worked
 calculations.
+
+## Theme
 
 The question is whether group algebras provide a useful organizing level for
 structures that physics usually introduces separately. Finite groups and their
@@ -28,6 +32,27 @@ representations, invariants, decompositions, and relationships with other
 structures. When a physics-motivated correspondence is discussed, the
 representation, algebra map, kernel, real form, involution, or other required
 data must be stated explicitly.
+
+## Approach
+
+Foundational physics supplies the motivation; mathematical structures are the
+subject. Structural hypotheses are turned into small, testable vertical slices,
+grounded in scholarly sources and explicit calculations, and examined through
+formalization as theory modeling to expose hidden assumptions. The workflow is
+informed, but not dictated, by established reference projects.
+
+Formalization is not only an endpoint. Missing hypotheses, ambiguous
+constructions, and useful reformulations found in Lean are fed back into the
+Forest notes and other mathematical materials, which are corrected or reshaped
+when needed.
+
+The inquiry is not limited to elaborating a single source or assigning one
+mathematical structure to each physical theory. Candidate structures are
+compared against shared requirements and constraints, so that useful
+correspondences, limitations, and relationships between different mathematical
+choices can be stated precisely.
+
+## Origins and guiding intuition
 
 Clifford algebras (a.k.a. Geometric Algebra in the context of work pioneered by
 David Hestenes) were considered as a potential route to this question. This
@@ -54,5 +79,24 @@ exploratory work in other directions, including non-associative algebras.
 Across these sources, we separate mathematical constructions from physical
 hypotheses.
 
+## Components
+
+- Forest notes support theory building, mathematical foundations, and focused
+  informal proofs and calculations.
+- The Lean library checks definitions, dependencies, constructions, and proofs.
+- A Verso Blueprint records theorem dependencies and nontrivial adaptations
+  made for formalization.
+
+To build the Lean library:
+
+```bash
+lake exe cache get
+lake build
+```
+
+## Conventions
+
 The Lean code and project workflow follow applicable conventions from
 [Tau Ceti](https://github.com/TauCetiProject/TauCeti).
+These conventions are adapted for this project's approach; see
+[`AI_POLICY.md`](AI_POLICY.md) and [`AGENTS.md`](AGENTS.md).
