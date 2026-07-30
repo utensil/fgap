@@ -12,19 +12,20 @@ import Mathlib.Tactic.NormNum
 /-!
 # The abstract binary tetrahedral group
 
-This file transports the concrete Hurwitz conjugation action to the standard
-abstract factors `QuaternionGroup 2` and `Multiplicative (ZMod 3)`. The
-resulting semidirect product is identified with the concrete subgroup of the
-invertible real quaternions.
+This file chooses an abstract model by transporting the concrete Hurwitz
+conjugation action to the standard factors `QuaternionGroup 2` and
+`Multiplicative (ZMod 3)`. The resulting semidirect product is identified with
+the concrete subgroup of the invertible real quaternions.
 
 ## Main declarations
 
 * `BinaryTetrahedral.abstractAction`: the transported action on the abstract
   quaternion group.
-* `BinaryTetrahedral.Abstract`: the canonical abstract semidirect-product
-  model.
+* `BinaryTetrahedral.Abstract`: the chosen abstract semidirect-product model.
 * `BinaryTetrahedral.abstractEquiv`: its equivalence with the concrete binary
   tetrahedral subgroup.
+* `BinaryTetrahedral.quaternionRealization`: its realization in the invertible
+  real quaternions.
 * `BinaryTetrahedral.centralInvolution`: its central element of order two.
 
 ## References
@@ -50,6 +51,7 @@ noncomputable def quaternionFactorEquiv :
     (Subgroup.subgroupOfEquivOfLe
       quaternionSubgroup_le_binaryTetrahedral).symm
 
+/-- Coercing the internal quaternion factor realizes it through `quaternionGroupHom`. -/
 @[simp]
 theorem coe_quaternionFactorEquiv (x : QuaternionGroup 2) :
     ((quaternionFactorEquiv x : binaryTetrahedralQuaternion) :
@@ -79,6 +81,7 @@ abbrev abstractAction :
   (MulAut.congr quaternionFactorEquiv.symm).toMonoidHom.comp
     (semidirectProductAction.comp cyclicFactorEquiv.toMonoidHom)
 
+/-- The transported abstract action evaluates through the corresponding internal factors. -/
 @[simp]
 theorem abstractAction_apply (c : Multiplicative (ZMod 3))
     (q : QuaternionGroup 2) :
@@ -88,7 +91,7 @@ theorem abstractAction_apply (c : Multiplicative (ZMod 3))
           (quaternionFactorEquiv q)) := by
   simp [abstractAction]
 
-/-- The canonical abstract model of the binary tetrahedral group. -/
+/-- The abstract model obtained from the transported Hurwitz action. -/
 abbrev Abstract :=
   QuaternionGroup 2 ⋊[abstractAction] Multiplicative (ZMod 3)
 
@@ -102,6 +105,7 @@ noncomputable def abstractFactorEquiv :
   (SemidirectProduct.congr'
     quaternionFactorEquiv.symm cyclicFactorEquiv.symm).symm
 
+/-- The abstract-factor equivalence maps each component through its factor equivalence. -/
 @[simp]
 theorem abstractFactorEquiv_apply (x : Abstract) :
     abstractFactorEquiv x =
@@ -116,6 +120,7 @@ quaternionic realization. -/
 noncomputable def abstractEquiv : Abstract ≃* binaryTetrahedral :=
   abstractFactorEquiv.trans semidirectProductEquiv
 
+/-- The abstract equivalence factors through the internal semidirect-product realization. -/
 @[simp]
 theorem abstractEquiv_apply (x : Abstract) :
     abstractEquiv x =
@@ -124,11 +129,12 @@ theorem abstractEquiv_apply (x : Abstract) :
   change semidirectProductEquiv (abstractFactorEquiv x) = _
   rw [abstractFactorEquiv_apply]
 
-/-- The faithful realization of the abstract binary tetrahedral group in the
-invertible real quaternions. -/
+/-- The realization of the abstract binary tetrahedral group in the invertible
+real quaternions. -/
 noncomputable def quaternionRealization : Abstract →* InvertibleQuaternions :=
   binaryTetrahedral.subtype.comp abstractEquiv
 
+/-- The quaternionic realization multiplies the realized quaternion and Hurwitz factors. -/
 @[simp]
 theorem quaternionRealization_apply (x : Abstract) :
     quaternionRealization x =
@@ -143,6 +149,7 @@ theorem quaternionRealization_apply (x : Abstract) :
         (abstractEquiv_apply x)
     _ = _ := by rw [semidirectProductEquiv_apply]; rfl
 
+/-- The quaternionic realization of the abstract binary tetrahedral group is injective. -/
 theorem quaternionRealization_injective :
     Function.Injective quaternionRealization :=
   binaryTetrahedral.subtype_injective.comp abstractEquiv.injective
@@ -151,6 +158,7 @@ theorem quaternionRealization_injective :
 def centralInvolution : Abstract :=
   SemidirectProduct.inl (QuaternionGroup.a 2)
 
+/-- The distinguished central involution realizes as the scalar quaternion `-1`. -/
 @[simp]
 theorem quaternionRealization_centralInvolution :
     quaternionRealization centralInvolution = -1 := by
@@ -167,6 +175,7 @@ theorem centralInvolution_mem_center :
   apply Units.ext
   simp
 
+/-- The distinguished central involution squares to `1`. -/
 @[simp]
 theorem centralInvolution_sq :
     centralInvolution ^ 2 = 1 := by
@@ -175,6 +184,7 @@ theorem centralInvolution_sq :
   apply Units.ext
   simp
 
+/-- The distinguished central involution is not the identity. -/
 @[simp]
 theorem centralInvolution_ne_one :
     centralInvolution ≠ 1 := by
