@@ -19,12 +19,7 @@ parts are produced by AI agents acting under non-disclosed directives that may
 or may not have been executed correctly, and which parts are the human touch.
 The provisional mechanism below implements this policy.
 
-`lgta` records AI approval of a pull request's substantive contribution.
-`lgth` records a human's holistic approval of that contribution. The labels
-disclose who approved the contribution, not its incidental commit identities.
-Both approvals survive only verified history normalization that leaves the
-contribution unchanged. Any substantive revision requires both approvals to
-be renewed.
+`lgta` means "looks good to AI agent." `lgth` means "looks good to human."
 
 The human maintainer gates `lgta`, informed by private agent interactions and
 an LLM Wiki; that exchange leaves no public trail beyond signals in commit
