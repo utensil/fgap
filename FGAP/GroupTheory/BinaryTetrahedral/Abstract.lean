@@ -187,8 +187,8 @@ theorem centralInvolution_ne_one :
 
 /-- The abstract binary tetrahedral group has cardinality 24. -/
 @[simp]
-theorem abstract_card : Nat.card Abstract = 24 := by
-  rw [Nat.card_congr abstractEquiv.toEquiv, binaryTetrahedral_card]
+theorem abstract_card : Nat.card Abstract = 24 :=
+  (Nat.card_congr abstractEquiv.toEquiv).trans binaryTetrahedral_card
 
 end
 

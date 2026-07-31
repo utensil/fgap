@@ -49,7 +49,7 @@ noncomputable def centralBasisInvolution : RealGroupAlgebra :=
 theorem centralBasisInvolution_mul_self :
     centralBasisInvolution * centralBasisInvolution = 1 :=
   _root_.GroupAlgebra.of_mul_self_eq_one centralInvolution
-    (by simpa [pow_two] using centralInvolution_sq)
+    (by simpa only [pow_two] using centralInvolution_sq)
 
 /-- The distinguished basis element is central. -/
 theorem centralBasisInvolution_mem_center :
@@ -58,52 +58,52 @@ theorem centralBasisInvolution_mem_center :
 
 /-- The positive central idempotent associated with the distinguished involution. -/
 noncomputable def centralPlus : RealGroupAlgebra :=
-  _root_.GroupAlgebra.centralPlus centralInvolution
+  CentralInvolution.centralPlus ℝ centralBasisInvolution
 
 /-- The negative central idempotent associated with the distinguished involution. -/
 noncomputable def centralMinus : RealGroupAlgebra :=
-  _root_.GroupAlgebra.centralMinus centralInvolution
+  CentralInvolution.centralMinus ℝ centralBasisInvolution
 
 /-- The positive central element is idempotent. -/
 theorem centralPlus_isIdempotentElem :
     IsIdempotentElem centralPlus :=
-  _root_.GroupAlgebra.isIdempotentElem_centralPlus centralInvolution
-    (by simpa [pow_two] using centralInvolution_sq)
+  CentralInvolution.isIdempotentElem_centralPlus centralBasisInvolution
+    centralBasisInvolution_mul_self
 
 /-- The negative central element is idempotent. -/
 theorem centralMinus_isIdempotentElem :
     IsIdempotentElem centralMinus :=
-  _root_.GroupAlgebra.isIdempotentElem_centralMinus centralInvolution
-    (by simpa [pow_two] using centralInvolution_sq)
+  CentralInvolution.isIdempotentElem_centralMinus centralBasisInvolution
+    centralBasisInvolution_mul_self
 
 /-- The positive central element annihilates the negative element. -/
 theorem centralPlus_mul_centralMinus :
     centralPlus * centralMinus = 0 :=
-  _root_.GroupAlgebra.centralPlus_mul_centralMinus centralInvolution
-    (by simpa [pow_two] using centralInvolution_sq)
+  CentralInvolution.centralPlus_mul_centralMinus centralBasisInvolution
+    centralBasisInvolution_mul_self
 
 /-- The negative central element annihilates the positive element. -/
 theorem centralMinus_mul_centralPlus :
     centralMinus * centralPlus = 0 :=
-  _root_.GroupAlgebra.centralMinus_mul_centralPlus centralInvolution
-    (by simpa [pow_two] using centralInvolution_sq)
+  CentralInvolution.centralMinus_mul_centralPlus centralBasisInvolution
+    centralBasisInvolution_mul_self
 
 /-- The positive and negative central elements add to 1. -/
 theorem centralPlus_add_centralMinus :
     centralPlus + centralMinus = 1 :=
-  _root_.GroupAlgebra.centralPlus_add_centralMinus centralInvolution
+  CentralInvolution.centralPlus_add_centralMinus centralBasisInvolution
 
 /-- The positive idempotent lies in the center of the real Group Algebra. -/
 theorem centralPlus_mem_center :
     centralPlus ∈ Set.center RealGroupAlgebra :=
-  _root_.GroupAlgebra.centralPlus_mem_center centralInvolution
-    centralInvolution_mem_center
+  CentralInvolution.centralPlus_mem_center centralBasisInvolution
+    centralBasisInvolution_mem_center
 
 /-- The negative idempotent lies in the center of the real Group Algebra. -/
 theorem centralMinus_mem_center :
     centralMinus ∈ Set.center RealGroupAlgebra :=
-  _root_.GroupAlgebra.centralMinus_mem_center centralInvolution
-    centralInvolution_mem_center
+  CentralInvolution.centralMinus_mem_center centralBasisInvolution
+    centralBasisInvolution_mem_center
 
 /-- Left multiplication by the positive central idempotent. -/
 noncomputable def plusProjection :
@@ -120,19 +120,15 @@ noncomputable def minusProjection :
 /-- The positive and negative projections add to the identity. -/
 theorem plusProjection_add_minusProjection :
     plusProjection + minusProjection = 1 :=
-  by
-    simpa [plusProjection, minusProjection] using
-      CentralInvolution.plusProjection_add_minusProjection centralBasisInvolution
-        centralBasisInvolution_mem_center (R := ℝ) (M := RealGroupAlgebra)
+  CentralInvolution.plusProjection_add_minusProjection centralBasisInvolution
+    centralBasisInvolution_mem_center (R := ℝ) (M := RealGroupAlgebra)
 
 /-- The positive and negative projection ranges are complementary. -/
 theorem isCompl_projection_ranges :
     IsCompl (LinearMap.range plusProjection)
       (LinearMap.range minusProjection) :=
-  by
-    simpa [plusProjection, minusProjection] using
-      CentralInvolution.isCompl_range_plusProjection_range_minusProjection
-        centralBasisInvolution centralBasisInvolution_mem_center
-        centralBasisInvolution_mul_self (R := ℝ) (M := RealGroupAlgebra)
+  CentralInvolution.isCompl_range_plusProjection_range_minusProjection
+    centralBasisInvolution centralBasisInvolution_mem_center
+    centralBasisInvolution_mul_self (R := ℝ) (M := RealGroupAlgebra)
 
 end BinaryTetrahedral
