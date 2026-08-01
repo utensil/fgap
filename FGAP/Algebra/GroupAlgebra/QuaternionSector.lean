@@ -81,7 +81,7 @@ theorem quaternionCentralInvolution_mem_center :
     simp [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul,
       Quaternion.imK_mul]
 
-/-- The distinguished quaternion involution squares to one. -/
+/-- The distinguished quaternion involution squares to 1. -/
 theorem quaternionCentralInvolution_sq :
     quaternionCentralInvolution * quaternionCentralInvolution = 1 := by
   apply Subtype.ext
@@ -135,7 +135,7 @@ theorem quaternionAlgebraMap_centralPlus :
     coe_quaternionCentralInvolution]
   simp
 
-/-- The quaternion representation sends the negative central idempotent to one. -/
+/-- The quaternion representation sends the negative central idempotent to 1. -/
 @[simp]
 theorem quaternionAlgebraMap_centralMinus :
     quaternionAlgebraMap
@@ -342,20 +342,20 @@ ambient group-algebra unit. -/
 abbrev quaternionMinusCorner : Type _ :=
   IsIdempotentElem.Corner isIdempotentElem_quaternionCentralMinus
 
-/-- Real scalar multiplication preserves the negative quaternion corner. -/
-theorem quaternionMinusCorner_smul_mem (r : ℝ) (x : quaternionMinusCorner) :
-    r • x.1 ∈ Subsemigroup.corner quaternionCentralMinus := by
-  refine (Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mpr ⟨?_, ?_⟩
-  · rw [Algebra.mul_smul_comm]
-    exact congrArg (r • ·)
-      ((Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2).1
-  · rw [smul_mul_assoc]
-    exact congrArg (r • ·)
-      ((Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2).2
-
+/-- The real scalar action on the negative quaternion corner, inherited from
+the ambient group algebra. -/
 instance quaternionMinusCornerSMul : SMul ℝ quaternionMinusCorner where
-  smul r x := ⟨r • x.1, quaternionMinusCorner_smul_mem r x⟩
+  smul r x := ⟨r • x.1, by
+    refine (Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mpr ⟨?_, ?_⟩
+    · rw [Algebra.mul_smul_comm]
+      exact congrArg (r • ·)
+        ((Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2).1
+    · rw [smul_mul_assoc]
+      exact congrArg (r • ·)
+        ((Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2).2⟩
 
+/-- The real module structure on the negative quaternion corner, inherited
+from the ambient group algebra. -/
 instance quaternionMinusCornerModule : Module ℝ quaternionMinusCorner where
   one_smul x := Subtype.ext (one_smul ℝ x.1)
   mul_smul r s x := Subtype.ext (mul_smul r s x.1)
@@ -367,30 +367,30 @@ instance quaternionMinusCornerModule : Module ℝ quaternionMinusCorner where
   add_smul r s x := Subtype.ext (add_smul r s x.1)
   zero_smul x := Subtype.ext (zero_smul ℝ x.1)
 
+/-- The real algebra structure on the negative quaternion corner, whose unit
+is `quaternionCentralMinus` in the ambient group algebra. -/
 noncomputable instance quaternionMinusCornerAlgebra : Algebra ℝ quaternionMinusCorner :=
   Algebra.ofModule
     (fun r x y => Subtype.ext (Algebra.smul_mul_assoc r x.1 y.1))
     (fun r x y => Subtype.ext (Algebra.mul_smul_comm r x.1 y.1))
 
+/-- The corner unit coerces to the negative central idempotent in the ambient
+group algebra. -/
 @[simp]
 theorem coe_quaternionMinusCorner_one :
     ((1 : quaternionMinusCorner).1 : QuaternionGroupAlgebra) = quaternionCentralMinus :=
   rfl
 
-/-- The real-linear map induced by the quaternion representation on the
-negative corner. -/
-def quaternionMinusCornerMapLinear : quaternionMinusCorner →ₗ[ℝ] ℍ[ℝ] where
-  toFun x := quaternionAlgebraMap x.1
-  map_add' x y := by
-    change quaternionAlgebraMap (x.1 + y.1) = _
-    rw [map_add]
-  map_smul' r x := by
-    change quaternionAlgebraMap (r • x.1) = _
-    simp
-
 /-- Restrict the quaternion representation to the negative corner algebra. -/
 noncomputable def quaternionMinusCornerMap : quaternionMinusCorner →ₐ[ℝ] ℍ[ℝ] :=
-  AlgHom.ofLinearMap quaternionMinusCornerMapLinear (by
+  AlgHom.ofLinearMap
+    { toFun x := quaternionAlgebraMap x.1
+      map_add' x y := by
+        change quaternionAlgebraMap (x.1 + y.1) = _
+        rw [map_add]
+      map_smul' r x := by
+        change quaternionAlgebraMap (r • x.1) = _
+        simp } (by
     change quaternionAlgebraMap quaternionCentralMinus = 1
     simp [quaternionCentralMinus]) (by
       intro x y
