@@ -6,6 +6,7 @@ module
 
 public import FGAP.Algebra.GroupAlgebra.CentralInvolution
 public import FGAP.Algebra.GroupAlgebra.QuaternionQuotient
+public import Mathlib.RingTheory.Idempotents
 
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Tactic.DeriveFintype
@@ -15,8 +16,9 @@ import Mathlib.Tactic.DeriveFintype
 
 The central quaternion `-1` splits the real quaternion-group algebra into
 positive and negative sectors. The positive sector is exactly the kernel of
-the quaternion representation, while the negative sector maps linearly and
-bijectively to Hamilton's quaternions.
+the quaternion representation. The negative sector is the carrier of a
+central-idempotent corner algebra, with its own local unit, and that corner is
+real-algebra equivalent to Hamilton's quaternions.
 
 ## Main declarations
 
@@ -24,8 +26,10 @@ bijectively to Hamilton's quaternions.
   the concrete quaternion subgroup.
 * `BinaryTetrahedral.ker_quaternionAlgebraMap_eq_quaternionPlusSector`: the
   positive sector is the kernel of the quaternion representation.
-* `BinaryTetrahedral.quaternionMinusSectorEquiv`: the negative sector is
-  real-linearly equivalent to `ℍ[ℝ]`.
+* `BinaryTetrahedral.quaternionMinusCornerAlgEquiv`: the negative corner is
+  real-algebra equivalent to `ℍ[ℝ]`.
+* `BinaryTetrahedral.quaternionMinusCornerToSector`: the corner and the
+  negative sector have the same underlying real vector space.
 
 ## References
 
@@ -312,6 +316,198 @@ theorem quaternionMinusSectorEquiv_apply (x : quaternionMinusSector) :
   by
     rw [quaternionMinusSectorEquiv, LinearEquiv.ofBijective_apply]
     rfl
+
+/-- The negative central idempotent for the quaternion central involution. -/
+noncomputable def quaternionCentralMinus : QuaternionGroupAlgebra :=
+  GroupAlgebra.centralMinus (R := ℝ) quaternionCentralInvolution
+
+/-- The negative quaternion central idempotent is idempotent. -/
+theorem isIdempotentElem_quaternionCentralMinus :
+    IsIdempotentElem quaternionCentralMinus := by
+  simpa [quaternionCentralMinus] using
+    (GroupAlgebra.isIdempotentElem_centralMinus (R := ℝ)
+      quaternionCentralInvolution quaternionCentralInvolution_sq)
+
+/-- The negative quaternion central idempotent is central. -/
+theorem quaternionCentralMinus_mem_center :
+    quaternionCentralMinus ∈ Set.center QuaternionGroupAlgebra := by
+  simpa [quaternionCentralMinus] using
+    (GroupAlgebra.centralMinus_mem_center (R := ℝ)
+      quaternionCentralInvolution quaternionCentralInvolution_mem_center)
+
+/-- The negative central-idempotent corner of the quaternion-group algebra.
+
+Its multiplicative unit is the negative central idempotent, rather than the
+ambient group-algebra unit. -/
+abbrev quaternionMinusCorner : Type _ :=
+  IsIdempotentElem.Corner isIdempotentElem_quaternionCentralMinus
+
+/-- Real scalar multiplication preserves the negative quaternion corner. -/
+theorem quaternionMinusCorner_smul_mem (r : ℝ) (x : quaternionMinusCorner) :
+    r • x.1 ∈ Subsemigroup.corner quaternionCentralMinus := by
+  refine (Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mpr ⟨?_, ?_⟩
+  · rw [Algebra.mul_smul_comm]
+    exact congrArg (r • ·)
+      ((Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2).1
+  · rw [smul_mul_assoc]
+    exact congrArg (r • ·)
+      ((Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2).2
+
+instance quaternionMinusCornerSMul : SMul ℝ quaternionMinusCorner where
+  smul r x := ⟨r • x.1, quaternionMinusCorner_smul_mem r x⟩
+
+instance quaternionMinusCornerModule : Module ℝ quaternionMinusCorner where
+  one_smul x := Subtype.ext (one_smul ℝ x.1)
+  mul_smul r s x := Subtype.ext (mul_smul r s x.1)
+  smul_add r x y := Subtype.ext (smul_add r x.1 y.1)
+  smul_zero r := by
+    apply Subtype.ext
+    change r • (0 : QuaternionGroupAlgebra) = 0
+    exact smul_zero r
+  add_smul r s x := Subtype.ext (add_smul r s x.1)
+  zero_smul x := Subtype.ext (zero_smul ℝ x.1)
+
+noncomputable instance quaternionMinusCornerAlgebra : Algebra ℝ quaternionMinusCorner :=
+  Algebra.ofModule
+    (fun r x y => Subtype.ext (Algebra.smul_mul_assoc r x.1 y.1))
+    (fun r x y => Subtype.ext (Algebra.mul_smul_comm r x.1 y.1))
+
+@[simp]
+theorem coe_quaternionMinusCorner_one :
+    ((1 : quaternionMinusCorner).1 : QuaternionGroupAlgebra) = quaternionCentralMinus :=
+  rfl
+
+/-- The real-linear map induced by the quaternion representation on the
+negative corner. -/
+def quaternionMinusCornerMapLinear : quaternionMinusCorner →ₗ[ℝ] ℍ[ℝ] where
+  toFun x := quaternionAlgebraMap x.1
+  map_add' x y := by
+    change quaternionAlgebraMap (x.1 + y.1) = _
+    rw [map_add]
+  map_smul' r x := by
+    change quaternionAlgebraMap (r • x.1) = _
+    simp
+
+/-- Restrict the quaternion representation to the negative corner algebra. -/
+noncomputable def quaternionMinusCornerMap : quaternionMinusCorner →ₐ[ℝ] ℍ[ℝ] :=
+  AlgHom.ofLinearMap quaternionMinusCornerMapLinear (by
+    change quaternionAlgebraMap quaternionCentralMinus = 1
+    simp [quaternionCentralMinus]) (by
+      intro x y
+      change quaternionAlgebraMap (x.1 * y.1) =
+        quaternionAlgebraMap x.1 * quaternionAlgebraMap y.1
+      exact map_mul quaternionAlgebraMap x.1 y.1)
+
+/-- The restricted quaternion representation is the ambient representation on
+the carrier of the negative corner. -/
+@[simp]
+theorem quaternionMinusCornerMap_apply (x : quaternionMinusCorner) :
+    quaternionMinusCornerMap x = quaternionAlgebraMap x.1 := by
+  rw [quaternionMinusCornerMap, AlgHom.ofLinearMap_apply]
+  rfl
+
+private theorem quaternionMinusCorner_fixed (x : quaternionMinusCorner) :
+    quaternionCentralMinus * x.1 = x.1 :=
+  (Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mp x.2 |>.1
+
+/-- The negative corner and negative sector have the same underlying real
+vector space. -/
+noncomputable def quaternionMinusCornerToSector :
+    quaternionMinusCorner ≃ₗ[ℝ] quaternionMinusSector := by
+  let f : quaternionMinusCorner →ₗ[ℝ] quaternionMinusSector :=
+    { toFun := fun x => ⟨x.1, ⟨x.1, by
+        change quaternionCentralMinus * x.1 = x.1
+        exact quaternionMinusCorner_fixed x⟩⟩
+      map_add' := by
+        intro x y
+        apply Subtype.ext
+        rfl
+      map_smul' := by
+        intro r x
+        apply Subtype.ext
+        rfl }
+  apply LinearEquiv.ofBijective f
+  constructor
+  · intro x y h
+    apply Subtype.ext
+    have hval := congrArg Subtype.val h
+    change x.1 = y.1 at hval
+    exact hval
+  · intro y
+    rcases y.2 with ⟨a, ha⟩
+    refine ⟨⟨y.1,
+      (Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mpr ⟨?_, ?_⟩⟩, ?_⟩
+    · rw [← ha]
+      change quaternionCentralMinus * (quaternionCentralMinus * a) =
+        quaternionCentralMinus * a
+      rw [← mul_assoc, isIdempotentElem_quaternionCentralMinus.eq]
+    · rw [← ha]
+      change (quaternionCentralMinus * a) * quaternionCentralMinus =
+        quaternionCentralMinus * a
+      calc
+        (quaternionCentralMinus * a) * quaternionCentralMinus =
+            quaternionCentralMinus * (a * quaternionCentralMinus) :=
+          mul_assoc _ _ _
+        _ = quaternionCentralMinus * (quaternionCentralMinus * a) := by
+          rw [show a * quaternionCentralMinus = quaternionCentralMinus * a from
+            (quaternionCentralMinus_mem_center.comm a).eq.symm]
+        _ = (quaternionCentralMinus * quaternionCentralMinus) * a :=
+          (mul_assoc _ _ _).symm
+        _ = quaternionCentralMinus * a := by
+          rw [isIdempotentElem_quaternionCentralMinus.eq]
+    · apply Subtype.ext
+      rfl
+
+/-- The corner-to-sector equivalence is the identity on ambient algebra
+elements. -/
+@[simp]
+theorem quaternionMinusCornerToSector_apply (x : quaternionMinusCorner) :
+    (quaternionMinusCornerToSector x).1 = x.1 := by
+  rw [quaternionMinusCornerToSector, LinearEquiv.ofBijective_apply]
+  rfl
+
+private theorem quaternionMinusCornerMap_surjective :
+    Function.Surjective quaternionMinusCornerMap := by
+  intro q
+  obtain ⟨x, hx⟩ := quaternionAlgebraMap_surjective q
+  refine ⟨⟨quaternionCentralMinus * x,
+    (Subsemigroup.mem_corner_iff isIdempotentElem_quaternionCentralMinus).mpr ⟨?_, ?_⟩⟩, ?_⟩
+  · rw [← mul_assoc, isIdempotentElem_quaternionCentralMinus.eq]
+  · calc
+      (quaternionCentralMinus * x) * quaternionCentralMinus =
+          quaternionCentralMinus * (x * quaternionCentralMinus) :=
+        mul_assoc _ _ _
+      _ = quaternionCentralMinus * (quaternionCentralMinus * x) := by
+        rw [show x * quaternionCentralMinus = quaternionCentralMinus * x from
+          (quaternionCentralMinus_mem_center.comm x).eq.symm]
+      _ = (quaternionCentralMinus * quaternionCentralMinus) * x :=
+        (mul_assoc _ _ _).symm
+      _ = quaternionCentralMinus * x := by
+        rw [isIdempotentElem_quaternionCentralMinus.eq]
+  · change quaternionAlgebraMap (quaternionCentralMinus * x) = q
+    have hmap : quaternionAlgebraMap quaternionCentralMinus = 1 := by
+      simp [quaternionCentralMinus]
+    rw [map_mul, hmap, one_mul, hx]
+
+private theorem quaternionMinusSectorEquiv_cornerToSector (x : quaternionMinusCorner) :
+    quaternionMinusSectorEquiv (quaternionMinusCornerToSector x) = quaternionMinusCornerMap x := by
+  rw [quaternionMinusSectorEquiv_apply]
+  rfl
+
+private theorem quaternionMinusCornerMap_injective :
+    Function.Injective quaternionMinusCornerMap := by
+  intro x y hxy
+  apply quaternionMinusCornerToSector.injective
+  apply quaternionMinusSectorEquiv.injective
+  rw [quaternionMinusSectorEquiv_cornerToSector, quaternionMinusSectorEquiv_cornerToSector]
+  exact hxy
+
+/-- The negative central-idempotent corner is real-algebra equivalent to
+Hamilton's quaternions. -/
+noncomputable def quaternionMinusCornerAlgEquiv :
+    quaternionMinusCorner ≃ₐ[ℝ] ℍ[ℝ] :=
+  AlgEquiv.ofBijective quaternionMinusCornerMap
+    ⟨quaternionMinusCornerMap_injective, quaternionMinusCornerMap_surjective⟩
 
 end
 
