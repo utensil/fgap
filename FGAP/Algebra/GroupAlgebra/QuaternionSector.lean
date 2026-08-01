@@ -305,6 +305,7 @@ noncomputable def quaternionMinusSectorEquiv :
     ⟨quaternionAlgebraMapOnMinusSector_injective,
       quaternionAlgebraMapOnMinusSector_surjective⟩
 
+/-- The negative-sector equivalence agrees with the quaternion representation. -/
 @[simp]
 theorem quaternionMinusSectorEquiv_apply (x : quaternionMinusSector) :
     quaternionMinusSectorEquiv x = quaternionAlgebraMap x :=
