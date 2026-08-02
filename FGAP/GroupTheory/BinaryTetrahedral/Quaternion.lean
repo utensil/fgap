@@ -21,7 +21,7 @@ unit, then verifies its cube and conjugation action by coordinate calculation.
 * `BinaryTetrahedral.hurwitzCycle`: the Hurwitz unit
   `(-1 + i + j + k) / 2`.
 * `BinaryTetrahedral.hurwitzCycle_pow_three` and
-  `BinaryTetrahedral.hurwitzCycle_ne_one`: its cube is one, but it is not the
+  `BinaryTetrahedral.hurwitzCycle_ne_one`: its cube is 1, but it is not the
   identity.
 * `BinaryTetrahedral.hurwitzCycle_conj_quaternionI`,
   `BinaryTetrahedral.hurwitzCycle_conj_quaternionJ`, and
@@ -94,7 +94,7 @@ def hurwitzCycle : InvertibleQuaternions :=
   Units.mk0 hurwitzCycleValue
     (Quaternion.normSq_ne_zero.mp (by norm_num [hurwitzCycleValue, Quaternion.normSq_def']))
 
-/-- The selected Hurwitz unit has cube one. -/
+/-- The selected Hurwitz unit has cube 1. -/
 theorem hurwitzCycle_pow_three : hurwitzCycle ^ 3 = 1 := by
   ext <;> norm_num [hurwitzCycle, hurwitzCycleValue, pow_succ,
     Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]

@@ -28,7 +28,7 @@ computes the dimension of the kernel.
   quaternion representation.
 * `BinaryTetrahedral.quaternionAlgebraMap_surjective`: the map is onto.
 * `BinaryTetrahedral.finrank_ker_quaternionAlgebraMap`: its kernel has real
-  dimension four.
+  dimension 4.
 * `BinaryTetrahedral.quaternionAlgebraQuotientEquiv`: the quotient by the kernel
   is isomorphic to `ℍ[ℝ]`.
 * `BinaryTetrahedral.quaternionKernelBasis`: an explicit basis of the linear
@@ -85,7 +85,7 @@ theorem quaternionAlgebraMap_surjective :
     simp [x, quaternionSubgroupI, quaternionSubgroupJ, quaternionI, quaternionJ,
       Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
-/-- The kernel of the quaternion representation has real dimension four. -/
+/-- The kernel of the quaternion representation has real dimension 4. -/
 theorem finrank_ker_quaternionAlgebraMap :
     Module.finrank ℝ (LinearMap.ker quaternionAlgebraMap.toLinearMap) = 4 := by
   have h_range :

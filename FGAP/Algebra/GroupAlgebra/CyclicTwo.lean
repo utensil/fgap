@@ -10,8 +10,8 @@ public import Mathlib.Data.ZMod.Basic
 /-!
 # The central split for the cyclic group of order two
 
-The nonidentity element of the cyclic group of order two is central and
-squares to one. This file uses it to calibrate the complementary central
+The nonidentity element of the cyclic group of order 2 is central and
+squares to 1. This file uses it to calibrate the complementary central
 idempotents in its Group Algebra.
 
 See Forest note `fgap-0011` for the complete algebra isomorphism
@@ -20,7 +20,7 @@ See Forest note `fgap-0011` for the complete algebra isomorphism
 ## Main declarations
 
 * `GroupAlgebra.c2Generator` is the nonidentity element of the cyclic group of
-  order two.
+  order 2.
 * `GroupAlgebra.isIdempotentElem_c2_centralPlus` and
   `GroupAlgebra.isIdempotentElem_c2_centralMinus` specialize the generic
   idempotence results.
@@ -34,16 +34,16 @@ namespace GroupAlgebra
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 
-/-- The nonidentity element of the cyclic group of order two. -/
+/-- The nonidentity element of the cyclic group of order 2. -/
 def c2Generator : Multiplicative (ZMod 2) :=
   Multiplicative.ofAdd 1
 
-/-- The nonidentity element of the cyclic group of order two squares to one. -/
+/-- The nonidentity element of the cyclic group of order 2 squares to 1. -/
 theorem c2Generator_mul_self : c2Generator * c2Generator = 1 := by
   change (1 : ZMod 2) + 1 = 0
   decide
 
-/-- The nonidentity element of the cyclic group of order two is central. -/
+/-- The nonidentity element of the cyclic group of order 2 is central. -/
 theorem c2Generator_mem_center : c2Generator ∈ Set.center (Multiplicative (ZMod 2)) :=
   Semigroup.mem_center_iff.mpr fun g => mul_comm g c2Generator
 

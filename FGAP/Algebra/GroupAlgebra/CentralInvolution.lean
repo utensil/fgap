@@ -56,18 +56,18 @@ theorem of_mem_center (z : G) (hz : z ∈ Set.center G) :
   Semigroup.mem_center_iff.mpr fun f =>
     (MonoidAlgebra.of_commute (fun g ↦ hz.comm g) f).eq.symm
 
-/-- The positive and negative Group-Algebra elements add to one. -/
+/-- The positive and negative Group-Algebra elements add to 1. -/
 theorem centralPlus_add_centralMinus (z : G) :
     centralPlus (R := R) z + centralMinus (R := R) z = 1 :=
   CentralInvolution.centralPlus_add_centralMinus (R := R) (MonoidAlgebra.of R G z)
 
-/-- The positive Group-Algebra element is idempotent when `z` squares to one. -/
+/-- The positive Group-Algebra element is idempotent when `z` squares to 1. -/
 theorem isIdempotentElem_centralPlus (z : G) (hz2 : z * z = 1) :
     IsIdempotentElem (centralPlus (R := R) z) :=
   CentralInvolution.isIdempotentElem_centralPlus (R := R) _
     (of_mul_self_eq_one (R := R) z hz2)
 
-/-- The negative Group-Algebra element is idempotent when `z` squares to one. -/
+/-- The negative Group-Algebra element is idempotent when `z` squares to 1. -/
 theorem isIdempotentElem_centralMinus (z : G) (hz2 : z * z = 1) :
     IsIdempotentElem (centralMinus (R := R) z) :=
   CentralInvolution.isIdempotentElem_centralMinus (R := R) _
