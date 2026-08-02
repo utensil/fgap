@@ -25,6 +25,8 @@ invertible real quaternions.
   model.
 * `BinaryTetrahedral.abstractEquiv`: its equivalence with the concrete binary
   tetrahedral subgroup.
+* `BinaryTetrahedral.quaternionRealization`: its faithful map to the invertible
+  real quaternions.
 * `BinaryTetrahedral.centralInvolution`: its central element of order 2.
 * `BinaryTetrahedral.abstract_card`: the abstract group has cardinality 24.
 
@@ -129,6 +131,13 @@ theorem abstractEquiv_apply (x : Abstract) :
 invertible real quaternions. -/
 noncomputable def quaternionRealization : Abstract →* InvertibleQuaternions :=
   binaryTetrahedral.subtype.comp abstractEquiv
+
+/-- The quaternionic realization is the concrete abstract-model equivalence
+followed by the subgroup inclusion into the invertible real quaternions. -/
+@[simp]
+theorem quaternionRealization_eq_abstractEquiv (x : Abstract) :
+    quaternionRealization x =
+      (abstractEquiv x : InvertibleQuaternions) := by rfl
 
 @[simp]
 theorem quaternionRealization_apply (x : Abstract) :
