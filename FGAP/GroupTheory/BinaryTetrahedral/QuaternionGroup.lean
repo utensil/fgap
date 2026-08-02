@@ -165,6 +165,20 @@ theorem quaternionGroupHom_a_two :
     norm_num [pow_succ, Quaternion.re_mul,
       Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul]
 
+/-- The cyclic normal form has the expected value under the structural
+quaternion-group homomorphism. -/
+theorem quaternionGroupHom_a_val (r : ZMod 4) :
+    quaternionGroupHom (QuaternionGroup.a r) = quaternionI ^ r.val :=
+  quaternionIPowers_val r
+
+/-- The twisted normal form has the expected value under the structural
+quaternion-group homomorphism. -/
+theorem quaternionGroupHom_xa_val (r : ZMod 4) :
+    quaternionGroupHom (QuaternionGroup.xa r) =
+      quaternionJ * quaternionI ^ r.val := by
+  change quaternionJ * quaternionIPowers (Multiplicative.ofAdd r) = _
+  rw [quaternionIPowers_val]
+
 private theorem quaternionGroupHom_injective :
     Function.Injective quaternionGroupHom := by
   rintro (r | r) (s | s) h <;>
@@ -242,6 +256,51 @@ theorem quaternionGroupEquiv_apply (x : QuaternionGroup 2) :
     (quaternionGroupEquiv x : InvertibleQuaternions) =
       quaternionGroupHom x :=
   MonoidHom.ofInjective_apply quaternionGroupHom_injective
+
+/-- An abstract cyclic normal form maps to the corresponding power of the
+quaternion unit `i`. -/
+theorem quaternionGroupEquiv_a_val (r : ZMod 4) :
+    (quaternionGroupEquiv (QuaternionGroup.a r) : InvertibleQuaternions) =
+      quaternionI ^ r.val := by
+  rw [quaternionGroupEquiv_apply]
+  exact quaternionGroupHom_a_val r
+
+/-- A twisted abstract normal form maps to `j` times the corresponding power
+of `i`. -/
+theorem quaternionGroupEquiv_xa_val (r : ZMod 4) :
+    (quaternionGroupEquiv (QuaternionGroup.xa r) : InvertibleQuaternions) =
+      quaternionJ * quaternionI ^ r.val := by
+  rw [quaternionGroupEquiv_apply]
+  exact quaternionGroupHom_xa_val r
+
+/-- The abstract representative of `1` maps to the identity quaternion. -/
+@[simp]
+theorem quaternionGroupEquiv_a_zero :
+    (quaternionGroupEquiv (QuaternionGroup.a 0) : InvertibleQuaternions) = 1 := by
+  rw [show (QuaternionGroup.a 0 : QuaternionGroup 2) = 1 by rfl, map_one]
+  rfl
+
+/-- The selected abstract generator maps to the quaternion unit `i`. -/
+@[simp]
+theorem quaternionGroupEquiv_a_one :
+    (quaternionGroupEquiv (QuaternionGroup.a 1) : InvertibleQuaternions) =
+      quaternionI := by
+  rw [quaternionGroupEquiv_apply]
+  exact quaternionIPowers_one
+
+/-- The central abstract representative maps to the quaternion `-1`. -/
+@[simp]
+theorem quaternionGroupEquiv_a_two :
+    (quaternionGroupEquiv (QuaternionGroup.a 2) : InvertibleQuaternions) = -1 := by
+  rw [quaternionGroupEquiv_apply, quaternionGroupHom_a_two]
+
+/-- The second selected abstract generator maps to the quaternion unit `j`. -/
+@[simp]
+theorem quaternionGroupEquiv_xa_zero :
+    (quaternionGroupEquiv (QuaternionGroup.xa 0) : InvertibleQuaternions) =
+      quaternionJ := by
+  rw [quaternionGroupEquiv_apply]
+  simp [quaternionGroupHom]
 
 /-- The concrete quaternion subgroup inherits finiteness from its abstract
 eight-element model. -/

@@ -251,22 +251,61 @@ def quaternionCoefficientPairSum (q : QuaternionGroup 2)
     (MonoidAlgebra.coeff x)
       (quaternionGroupEquiv (QuaternionGroup.a 2 * q))
 
+/-- Expanding a coefficient-pair sum gives the 2 coefficients at `q` and its
+central negative `-q`. -/
+theorem quaternionCoefficientPairSum_apply (q : QuaternionGroup 2)
+    (x : QuaternionGroupAlgebra) :
+    quaternionCoefficientPairSum q x =
+      (MonoidAlgebra.coeff x) (quaternionGroupEquiv q) +
+        (MonoidAlgebra.coeff x)
+          (quaternionGroupEquiv (QuaternionGroup.a 2 * q)) := by
+  rfl
+
 /-- The coefficient-pair sum at `±1`. -/
 def quaternionCoefficientSumOne (x : QuaternionGroupAlgebra) : ℝ :=
   quaternionCoefficientPairSum (QuaternionGroup.a 0) x
+
+/-- The coefficient-pair sum at `±1` is the generic sum at the identity
+representative. -/
+theorem quaternionCoefficientSumOne_apply (x : QuaternionGroupAlgebra) :
+    quaternionCoefficientSumOne x =
+      quaternionCoefficientPairSum (QuaternionGroup.a 0) x := by
+  rfl
 
 /-- The coefficient-pair sum at `±i`. -/
 def quaternionCoefficientSumI (x : QuaternionGroupAlgebra) : ℝ :=
   quaternionCoefficientPairSum (QuaternionGroup.a 1) x
 
+/-- The coefficient-pair sum at `±i` is the generic sum at the selected
+`i` representative. -/
+theorem quaternionCoefficientSumI_apply (x : QuaternionGroupAlgebra) :
+    quaternionCoefficientSumI x =
+      quaternionCoefficientPairSum (QuaternionGroup.a 1) x := by
+  rfl
+
 /-- The coefficient-pair sum at `±j`. -/
 def quaternionCoefficientSumJ (x : QuaternionGroupAlgebra) : ℝ :=
   quaternionCoefficientPairSum (QuaternionGroup.xa 0) x
+
+/-- The coefficient-pair sum at `±j` is the generic sum at the selected
+`j` representative. -/
+theorem quaternionCoefficientSumJ_apply (x : QuaternionGroupAlgebra) :
+    quaternionCoefficientSumJ x =
+      quaternionCoefficientPairSum (QuaternionGroup.xa 0) x := by
+  rfl
 
 /-- The coefficient-pair sum at `±k`, with `k` represented by `i * j`. -/
 def quaternionCoefficientSumK (x : QuaternionGroupAlgebra) : ℝ :=
   quaternionCoefficientPairSum
     (QuaternionGroup.a 1 * QuaternionGroup.xa 0) x
+
+/-- The coefficient-pair sum at `±k` is the generic sum at the oriented
+representative `i * j`. -/
+theorem quaternionCoefficientSumK_apply (x : QuaternionGroupAlgebra) :
+    quaternionCoefficientSumK x =
+      quaternionCoefficientPairSum
+        (QuaternionGroup.a 1 * QuaternionGroup.xa 0) x := by
+  rfl
 
 @[simp]
 private theorem coeff_of_quaternionGroupEquiv (g h : QuaternionGroup 2) :
