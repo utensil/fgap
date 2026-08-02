@@ -20,14 +20,15 @@ or may not have been executed correctly, and which parts are the human touch.
 The provisional mechanism below implements this policy.
 
 `lgta` means "looks good to AI agent." `lgth` means "looks good to human."
-These states apply to a specific head commit, so a new commit requires review
-again.
 
-The communication channels are separated. AI agents own the code
-and documentation, issue and pull-request titles and bodies, and commit
-messages. They do not post comments. Review and revision considerations and
-changes are reflected only in commit messages. Humans own pull-request comments
-and the `lgth` label.
+The communication channels are separated.
+
+AI agents own the code and documentation, issue and pull-request titles and
+bodies, and commit messages. They do not post comments. Review and revision
+considerations and changes are reflected only in commit messages. `lgta`
+remains gated by a human, informed by interactions with agents and an LLM Wiki.
+
+Humans own pull-request comments and the `lgth` label.
 
 AI agents also own `dev`, the integration and testing branch for pull-request
 work that has reached `lgta`. It is not an implicit base for new work. Merge
