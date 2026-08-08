@@ -1,6 +1,6 @@
-![FGAP banner](assets/fgap-banner.png)
-
 # FGAP
+
+![FGAP banner](assets/fgap-banner.png)
 
 FGAP is read "F-gap," for the foundational gap between established mathematical
 tools and open questions about physical structures, especially beyond the
