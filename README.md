@@ -1,5 +1,8 @@
 # FGAP
 
+> [!WARNING]
+> Highly experimental, early-stage research. Everything here is provisional: expect frequent changes and unfinished proofs.
+
 ![FGAP banner](assets/fgap-banner.png)
 
 FGAP is read "F-gap," for the foundational gap between established mathematical
