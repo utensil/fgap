@@ -18,6 +18,8 @@ unit, then verifies its cube and conjugation action by coordinate calculation.
 
 ## Main declarations
 
+* `BinaryTetrahedral.quaternionI`, `BinaryTetrahedral.quaternionJ`, and
+  `BinaryTetrahedral.quaternionK`: the standard quaternion units.
 * `BinaryTetrahedral.hurwitzCycle`: the Hurwitz unit
   `(-1 + i + j + k) / 2`.
 * `BinaryTetrahedral.hurwitzCycle_pow_three` and

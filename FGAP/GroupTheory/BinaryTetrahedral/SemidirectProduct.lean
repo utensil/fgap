@@ -44,14 +44,15 @@ abbrev semidirectProductAction :
 
 /-- The external semidirect product determined by Hurwitz conjugation is
 equivalent to the concrete binary tetrahedral subgroup. The source consists
-of pairs of internal-factor elements; the target consists of invertible real
-quaternions. -/
+of pairs of internal-factor elements; the target is the concrete
+`binaryTetrahedral` subgroup. -/
 @[expose]
 noncomputable def semidirectProductEquiv :
     binaryTetrahedralQuaternion ⋊[semidirectProductAction]
       binaryTetrahedralCyclic ≃* binaryTetrahedral :=
   SemidirectProduct.mulEquivSubgroup binaryTetrahedral_isComplement
 
+/-- The semidirect-product equivalence maps a pair of factors to their product. -/
 @[simp]
 theorem semidirectProductEquiv_apply
     (x : binaryTetrahedralQuaternion ⋊[semidirectProductAction]

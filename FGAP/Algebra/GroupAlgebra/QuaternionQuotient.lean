@@ -61,11 +61,13 @@ def quaternionAlgebraMap : QuaternionGroupAlgebra →ₐ[ℝ] ℍ[ℝ] :=
   MonoidAlgebra.lift ℝ (ℍ[ℝ]) quaternionSubgroup
     ((Units.coeHom (ℍ[ℝ])).comp quaternionSubgroup.subtype)
 
+/-- The quaternion representation maps a basis element to its underlying quaternion. -/
 @[simp]
 theorem quaternionAlgebraMap_of (q : quaternionSubgroup) :
     quaternionAlgebraMap (MonoidAlgebra.of ℝ quaternionSubgroup q) = (q.1 : ℍ[ℝ]) :=
   MonoidAlgebra.lift_of _ q
 
+/-- The quaternion representation maps a single term to the corresponding scalar multiple. -/
 @[simp]
 theorem quaternionAlgebraMap_single (q : quaternionSubgroup) (r : ℝ) :
     quaternionAlgebraMap (MonoidAlgebra.single q r) = r • (q.1 : ℍ[ℝ]) :=
