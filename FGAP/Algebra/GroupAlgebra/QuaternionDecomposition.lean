@@ -130,6 +130,14 @@ theorem quaternionCoefficientPairDifference_apply (q : QuaternionGroup 2)
           (quaternionGroupEquiv (QuaternionGroup.a 2 * q)) := by
   rfl
 
+private def quaternionCoefficientPairDifferenceLinearMap
+    (q : QuaternionGroup 2) : QuaternionGroupAlgebra →ₗ[ℝ] ℝ :=
+  (Finsupp.lapply (quaternionGroupEquiv q)).comp
+      (MonoidAlgebra.coeffLinearEquiv ℝ).toLinearMap -
+    (Finsupp.lapply
+      (quaternionGroupEquiv (QuaternionGroup.a 2 * q))).comp
+        (MonoidAlgebra.coeffLinearEquiv ℝ).toLinearMap
+
 @[simp]
 private theorem coeff_of_quaternionGroupEquiv (g h : QuaternionGroup 2) :
     (MonoidAlgebra.coeff
@@ -138,91 +146,19 @@ private theorem coeff_of_quaternionGroupEquiv (g h : QuaternionGroup 2) :
   classical
   simp [Finsupp.single_apply]
 
-private theorem quaternionAlgebraMap_re_of (g : QuaternionGroup 2) :
+private theorem quaternionAlgebraMap_coordinates_of (g : QuaternionGroup 2) :
     (quaternionAlgebraMap
       (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g))).re =
         quaternionCoefficientPairDifference (QuaternionGroup.a 0)
-          (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)) := by
-  rw [quaternionAlgebraMap_of]
-  simp only [quaternionCoefficientPairDifference_apply,
-    coeff_of_quaternionGroupEquiv]
-  cases g with
-  | a r =>
-      fin_cases r
-      all_goals
-        repeat first
-          | rw [if_pos (by decide)]
-          | rw [if_neg (by decide)]
-        norm_num [quaternionGroupHom_a_val, ZMod.val, pow_succ,
-          Quaternion.re_mul, Quaternion.imI_mul,
-          Quaternion.imJ_mul, Quaternion.imK_mul]
-  | xa r =>
-      fin_cases r
-      all_goals
-        repeat first
-          | rw [if_pos (by decide)]
-          | rw [if_neg (by decide)]
-        norm_num [quaternionGroupHom_xa_val, ZMod.val, pow_succ,
-          Quaternion.re_mul, Quaternion.imI_mul,
-          Quaternion.imJ_mul, Quaternion.imK_mul]
-
-private theorem quaternionAlgebraMap_imI_of (g : QuaternionGroup 2) :
+          (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)) ∧
     (quaternionAlgebraMap
       (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g))).imI =
         quaternionCoefficientPairDifference (QuaternionGroup.a 1)
-          (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)) := by
-  rw [quaternionAlgebraMap_of]
-  simp only [quaternionCoefficientPairDifference_apply,
-    coeff_of_quaternionGroupEquiv]
-  cases g with
-  | a r =>
-      fin_cases r
-      all_goals
-        repeat first
-          | rw [if_pos (by decide)]
-          | rw [if_neg (by decide)]
-        norm_num [quaternionGroupHom_a_val, ZMod.val, pow_succ,
-          Quaternion.re_mul, Quaternion.imI_mul,
-          Quaternion.imJ_mul, Quaternion.imK_mul]
-  | xa r =>
-      fin_cases r
-      all_goals
-        repeat first
-          | rw [if_pos (by decide)]
-          | rw [if_neg (by decide)]
-        norm_num [quaternionGroupHom_xa_val, ZMod.val, pow_succ,
-          Quaternion.re_mul, Quaternion.imI_mul,
-          Quaternion.imJ_mul, Quaternion.imK_mul]
-
-private theorem quaternionAlgebraMap_imJ_of (g : QuaternionGroup 2) :
+          (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)) ∧
     (quaternionAlgebraMap
       (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g))).imJ =
         quaternionCoefficientPairDifference (QuaternionGroup.xa 0)
-          (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)) := by
-  rw [quaternionAlgebraMap_of]
-  simp only [quaternionCoefficientPairDifference_apply,
-    coeff_of_quaternionGroupEquiv]
-  cases g with
-  | a r =>
-      fin_cases r
-      all_goals
-        repeat first
-          | rw [if_pos (by decide)]
-          | rw [if_neg (by decide)]
-        norm_num [quaternionGroupHom_a_val, ZMod.val, pow_succ,
-          Quaternion.re_mul, Quaternion.imI_mul,
-          Quaternion.imJ_mul, Quaternion.imK_mul]
-  | xa r =>
-      fin_cases r
-      all_goals
-        repeat first
-          | rw [if_pos (by decide)]
-          | rw [if_neg (by decide)]
-        norm_num [quaternionGroupHom_xa_val, ZMod.val, pow_succ,
-          Quaternion.re_mul, Quaternion.imI_mul,
-          Quaternion.imJ_mul, Quaternion.imK_mul]
-
-private theorem quaternionAlgebraMap_imK_of (g : QuaternionGroup 2) :
+          (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)) ∧
     (quaternionAlgebraMap
       (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g))).imK =
         quaternionCoefficientPairDifference
@@ -251,71 +187,59 @@ private theorem quaternionAlgebraMap_imK_of (g : QuaternionGroup 2) :
           Quaternion.re_mul, Quaternion.imI_mul,
           Quaternion.imJ_mul, Quaternion.imK_mul]
 
+private theorem quaternionAlgebraMap_coordinate
+    (coord : ℍ[ℝ] →ₗ[ℝ] ℝ) (q : QuaternionGroup 2)
+    (h_basis : ∀ g : QuaternionGroup 2,
+      coord (quaternionAlgebraMap
+        (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g))) =
+          quaternionCoefficientPairDifference q
+            (MonoidAlgebra.of ℝ quaternionSubgroup (quaternionGroupEquiv g)))
+    (x : QuaternionGroupAlgebra) :
+    coord (quaternionAlgebraMap x) =
+      quaternionCoefficientPairDifference q x := by
+  change coord (quaternionAlgebraMap x) =
+    quaternionCoefficientPairDifferenceLinearMap q x
+  induction x using MonoidAlgebra.induction_on with
+  | hM g =>
+      obtain ⟨g, rfl⟩ := quaternionGroupEquiv.surjective g
+      exact h_basis g
+  | hadd x y hx hy =>
+      simpa only [map_add] using congrArg₂ (· + ·) hx hy
+  | hsmul r x hx =>
+      simpa only [map_smul] using congrArg (r • ·) hx
+
 /-- The real coordinate of the quaternion map recovers the coefficient
 difference at `±1`. -/
 theorem quaternionAlgebraMap_re (x : QuaternionGroupAlgebra) :
     (quaternionAlgebraMap x).re =
       quaternionCoefficientPairDifference (QuaternionGroup.a 0) x := by
-  classical
-  induction x using MonoidAlgebra.induction_on with
-  | hM q =>
-      obtain ⟨g, rfl⟩ := quaternionGroupEquiv.surjective q
-      exact quaternionAlgebraMap_re_of g
-  | hadd x y hx hy =>
-      simp only [map_add, Quaternion.re_add,
-        quaternionCoefficientPairDifference, MonoidAlgebra.coeff_add,
-        Finsupp.add_apply] at hx hy ⊢
-      linarith
-  | hsmul r x hx =>
-      simp only [map_smul, Quaternion.re_smul,
-        quaternionCoefficientPairDifference,
-        MonoidAlgebra.coeff_smul_apply, smul_eq_mul] at hx ⊢
-      rw [hx]
-      ring
+  change (QuaternionAlgebra.reₗ (-1 : ℝ) 0 (-1))
+    (quaternionAlgebraMap x) = _
+  exact quaternionAlgebraMap_coordinate
+    (QuaternionAlgebra.reₗ (-1 : ℝ) 0 (-1)) (QuaternionGroup.a 0)
+    (fun g ↦ (quaternionAlgebraMap_coordinates_of g).1) x
 
 /-- The `i` coordinate of the quaternion map recovers the coefficient
 difference at `±i`. -/
 theorem quaternionAlgebraMap_imI (x : QuaternionGroupAlgebra) :
     (quaternionAlgebraMap x).imI =
       quaternionCoefficientPairDifference (QuaternionGroup.a 1) x := by
-  classical
-  induction x using MonoidAlgebra.induction_on with
-  | hM q =>
-      obtain ⟨g, rfl⟩ := quaternionGroupEquiv.surjective q
-      exact quaternionAlgebraMap_imI_of g
-  | hadd x y hx hy =>
-      simp only [map_add, Quaternion.imI_add,
-        quaternionCoefficientPairDifference, MonoidAlgebra.coeff_add,
-        Finsupp.add_apply] at hx hy ⊢
-      linarith
-  | hsmul r x hx =>
-      simp only [map_smul, Quaternion.imI_smul,
-        quaternionCoefficientPairDifference,
-        MonoidAlgebra.coeff_smul_apply, smul_eq_mul] at hx ⊢
-      rw [hx]
-      ring
+  change (QuaternionAlgebra.imIₗ (-1 : ℝ) 0 (-1))
+    (quaternionAlgebraMap x) = _
+  exact quaternionAlgebraMap_coordinate
+    (QuaternionAlgebra.imIₗ (-1 : ℝ) 0 (-1)) (QuaternionGroup.a 1)
+    (fun g ↦ (quaternionAlgebraMap_coordinates_of g).2.1) x
 
 /-- The `j` coordinate of the quaternion map recovers the coefficient
 difference at `±j`. -/
 theorem quaternionAlgebraMap_imJ (x : QuaternionGroupAlgebra) :
     (quaternionAlgebraMap x).imJ =
       quaternionCoefficientPairDifference (QuaternionGroup.xa 0) x := by
-  classical
-  induction x using MonoidAlgebra.induction_on with
-  | hM q =>
-      obtain ⟨g, rfl⟩ := quaternionGroupEquiv.surjective q
-      exact quaternionAlgebraMap_imJ_of g
-  | hadd x y hx hy =>
-      simp only [map_add, Quaternion.imJ_add,
-        quaternionCoefficientPairDifference, MonoidAlgebra.coeff_add,
-        Finsupp.add_apply] at hx hy ⊢
-      linarith
-  | hsmul r x hx =>
-      simp only [map_smul, Quaternion.imJ_smul,
-        quaternionCoefficientPairDifference,
-        MonoidAlgebra.coeff_smul_apply, smul_eq_mul] at hx ⊢
-      rw [hx]
-      ring
+  change (QuaternionAlgebra.imJₗ (-1 : ℝ) 0 (-1))
+    (quaternionAlgebraMap x) = _
+  exact quaternionAlgebraMap_coordinate
+    (QuaternionAlgebra.imJₗ (-1 : ℝ) 0 (-1)) (QuaternionGroup.xa 0)
+    (fun g ↦ (quaternionAlgebraMap_coordinates_of g).2.2.1) x
 
 /-- The `k` coordinate of the quaternion map recovers the coefficient
 difference at `±k`, with `k = i * j`. -/
@@ -323,22 +247,12 @@ theorem quaternionAlgebraMap_imK (x : QuaternionGroupAlgebra) :
     (quaternionAlgebraMap x).imK =
       quaternionCoefficientPairDifference
         (QuaternionGroup.a 1 * QuaternionGroup.xa 0) x := by
-  classical
-  induction x using MonoidAlgebra.induction_on with
-  | hM q =>
-      obtain ⟨g, rfl⟩ := quaternionGroupEquiv.surjective q
-      exact quaternionAlgebraMap_imK_of g
-  | hadd x y hx hy =>
-      simp only [map_add, Quaternion.imK_add,
-        quaternionCoefficientPairDifference, MonoidAlgebra.coeff_add,
-        Finsupp.add_apply] at hx hy ⊢
-      linarith
-  | hsmul r x hx =>
-      simp only [map_smul, Quaternion.imK_smul,
-        quaternionCoefficientPairDifference,
-        MonoidAlgebra.coeff_smul_apply, smul_eq_mul] at hx ⊢
-      rw [hx]
-      ring
+  change (QuaternionAlgebra.imKₗ (-1 : ℝ) 0 (-1))
+    (quaternionAlgebraMap x) = _
+  exact quaternionAlgebraMap_coordinate
+    (QuaternionAlgebra.imKₗ (-1 : ℝ) 0 (-1))
+    (QuaternionGroup.a 1 * QuaternionGroup.xa 0)
+    (fun g ↦ (quaternionAlgebraMap_coordinates_of g).2.2.2) x
 
 /-- The quaternion coordinate map paired with all 4 real character
 coordinates. -/
@@ -355,13 +269,9 @@ theorem quaternionRealBlocksMap_apply (x : QuaternionGroupAlgebra) :
       (quaternionCharacterMap x, quaternionAlgebraMap x) := by
   rfl
 
-private theorem zmod_four_cases (r : ZMod 4) :
-    r = 0 ∨ r = 1 ∨ r = 2 ∨ r = 3 := by
-  fin_cases r
-  · exact Or.inl rfl
-  · exact Or.inr (Or.inl rfl)
-  · exact Or.inr (Or.inr (Or.inl rfl))
-  · exact Or.inr (Or.inr (Or.inr rfl))
+private theorem eq_zero_of_sum_and_difference_eq_zero {a b : ℝ}
+    (hs : a + b = 0) (hd : a - b = 0) : a = 0 ∧ b = 0 := by
+  constructor <;> linarith
 
 private theorem eq_zero_of_pair_sums_and_differences_eq_zero
     (x : QuaternionGroupAlgebra)
@@ -385,51 +295,20 @@ private theorem eq_zero_of_pair_sums_and_differences_eq_zero
   rw [quaternionCoefficientSumK_apply,
     quaternionCoefficientPairSum_apply] at hsK
   simp only [quaternionCoefficientPairDifference_apply] at hdOne hdI hdJ hdK
-  have hOne :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv (QuaternionGroup.a 0)) = 0 := by
-    linarith [hsOne, hdOne]
-  have hNegOne :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv
-          (QuaternionGroup.a 2 * QuaternionGroup.a 0)) = 0 := by
-    linarith [hsOne, hdOne]
-  have hI :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv (QuaternionGroup.a 1)) = 0 := by
-    linarith [hsI, hdI]
-  have hNegI :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv
-          (QuaternionGroup.a 2 * QuaternionGroup.a 1)) = 0 := by
-    linarith [hsI, hdI]
-  have hJ :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv (QuaternionGroup.xa 0)) = 0 := by
-    linarith [hsJ, hdJ]
-  have hNegJ :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv
-          (QuaternionGroup.a 2 * QuaternionGroup.xa 0)) = 0 := by
-    linarith [hsJ, hdJ]
-  have hK :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv
-          (QuaternionGroup.a 1 * QuaternionGroup.xa 0)) = 0 := by
-    linarith [hsK, hdK]
-  have hNegK :
-      (MonoidAlgebra.coeff x)
-        (quaternionGroupEquiv
-          (QuaternionGroup.a 2 *
-            (QuaternionGroup.a 1 * QuaternionGroup.xa 0))) = 0 := by
-    linarith [hsK, hdK]
+  obtain ⟨hOne, hNegOne⟩ :=
+    eq_zero_of_sum_and_difference_eq_zero hsOne hdOne
+  obtain ⟨hI, hNegI⟩ :=
+    eq_zero_of_sum_and_difference_eq_zero hsI hdI
+  obtain ⟨hJ, hNegJ⟩ :=
+    eq_zero_of_sum_and_difference_eq_zero hsJ hdJ
+  obtain ⟨hK, hNegK⟩ :=
+    eq_zero_of_sum_and_difference_eq_zero hsK hdK
   ext q
   obtain ⟨g, rfl⟩ := quaternionGroupEquiv.surjective q
   simp only [MonoidAlgebra.coeff_zero, Finsupp.zero_apply]
   cases g with
   | a r =>
-      have hr := zmod_four_cases r
-      rcases hr with rfl | rfl | rfl | rfl
+      fin_cases r
       · exact hOne
       · exact hI
       · rw [show (QuaternionGroup.a 2 * QuaternionGroup.a 0 :
@@ -439,8 +318,7 @@ private theorem eq_zero_of_pair_sums_and_differences_eq_zero
             QuaternionGroup 2) = QuaternionGroup.a 3 by decide] at hNegI
         exact hNegI
   | xa r =>
-      have hr := zmod_four_cases r
-      rcases hr with rfl | rfl | rfl | rfl
+      fin_cases r
       · exact hJ
       · rw [show (QuaternionGroup.a 2 *
             (QuaternionGroup.a 1 * QuaternionGroup.xa 0) :
