@@ -12,7 +12,7 @@ import Mathlib.Tactic.NoncommRing
 /-!
 # Splitting along a central involution
 
-Let `z` be a central element of an algebra such that `z * z = 1`. When two is
+Let `z` be a central element of an algebra such that `z * z = 1`. When 2 is
 invertible in the base ring, the elements
 
 `e₊ = ⅟ 2 • (1 + z)` and `e₋ = ⅟ 2 • (1 - z)`
@@ -51,7 +51,7 @@ def centralPlus (R : Type*) [CommRing R] [Algebra R A] [Invertible (2 : R)] (z :
 def centralMinus (R : Type*) [CommRing R] [Algebra R A] [Invertible (2 : R)] (z : A) : A :=
   (⅟ (2 : R)) • (1 - z)
 
-/-- The positive and negative elements add to one. -/
+/-- The positive and negative elements add to 1. -/
 theorem centralPlus_add_centralMinus (z : A) :
     centralPlus R z + centralMinus R z = 1 := by
   rw [centralPlus, centralMinus, ← smul_add]
@@ -64,7 +64,7 @@ theorem one_sub_centralPlus (z : A) :
     1 - centralPlus R z = centralMinus R z := by
   rw [sub_eq_iff_eq_add, add_comm, centralPlus_add_centralMinus]
 
-/-- The positive element is idempotent when `z` squares to one. -/
+/-- The positive element is idempotent when `z` squares to 1. -/
 theorem centralPlus_mul_self (z : A) (hz : z * z = 1) :
     centralPlus R z * centralPlus R z = centralPlus R z := by
   rw [centralPlus, smul_mul_smul]
@@ -80,7 +80,7 @@ theorem isIdempotentElem_centralPlus (z : A) (hz : z * z = 1) :
     IsIdempotentElem (centralPlus R z) :=
   centralPlus_mul_self (R := R) z hz
 
-/-- The negative element is idempotent when `z` squares to one. -/
+/-- The negative element is idempotent when `z` squares to 1. -/
 theorem centralMinus_mul_self (z : A) (hz : z * z = 1) :
     centralMinus R z * centralMinus R z = centralMinus R z := by
   rw [← one_sub_centralPlus (R := R)]
@@ -144,11 +144,11 @@ theorem centralMul_apply (a : A) (ha : a ∈ Set.center A) (x : M) :
     centralMul a ha x = a • x :=
   rfl
 
-/-- The endomorphism that becomes the positive projection when `z` squares to one. -/
+/-- The endomorphism that becomes the positive projection when `z` squares to 1. -/
 def plusProjection (z : A) (hz : z ∈ Set.center A) : Module.End A M :=
   centralMul (centralPlus R z) (centralPlus_mem_center (R := R) z hz)
 
-/-- The endomorphism that becomes the negative projection when `z` squares to one. -/
+/-- The endomorphism that becomes the negative projection when `z` squares to 1. -/
 def minusProjection (z : A) (hz : z ∈ Set.center A) : Module.End A M :=
   centralMul (centralMinus R z) (centralMinus_mem_center (R := R) z hz)
 
@@ -164,14 +164,14 @@ theorem minusProjection_apply (z : A) (hz : z ∈ Set.center A) (x : M) :
     minusProjection (R := R) z hz x = centralMinus R z • x :=
   rfl
 
-/-- The positive projection is idempotent when `z` squares to one. -/
+/-- The positive projection is idempotent when `z` squares to 1. -/
 theorem isIdempotentElem_plusProjection (z : A) (hz : z ∈ Set.center A)
     (hz2 : z * z = 1) :
     IsIdempotentElem (plusProjection (R := R) (M := M) z hz) := by
   ext x
   simp [plusProjection, centralMul, smul_smul, centralPlus_mul_self (R := R) z hz2]
 
-/-- The negative projection is idempotent when `z` squares to one. -/
+/-- The negative projection is idempotent when `z` squares to 1. -/
 theorem isIdempotentElem_minusProjection (z : A) (hz : z ∈ Set.center A)
     (hz2 : z * z = 1) :
     IsIdempotentElem (minusProjection (R := R) (M := M) z hz) := by

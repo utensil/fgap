@@ -25,7 +25,7 @@ invertible real quaternions.
   model.
 * `BinaryTetrahedral.abstractEquiv`: its equivalence with the concrete binary
   tetrahedral subgroup.
-* `BinaryTetrahedral.centralInvolution`: its central element of order two.
+* `BinaryTetrahedral.centralInvolution`: its central element of order 2.
 * `BinaryTetrahedral.abstract_card`: the abstract group has cardinality 24.
 
 ## References
@@ -65,7 +65,7 @@ theorem coe_quaternionFactorEquiv (x : QuaternionGroup 2) :
     Subgroup.subgroupOfEquivOfLe_symm_apply_coe_coe,
     quaternionGroupEquiv_apply]
 
-/-- The standard cyclic group of order three identified with the internal
+/-- The standard cyclic group of order 3 identified with the internal
 Hurwitz factor of the concrete binary tetrahedral subgroup. -/
 noncomputable def cyclicFactorEquiv :
     Multiplicative (ZMod 3) ≃* binaryTetrahedralCyclic :=
